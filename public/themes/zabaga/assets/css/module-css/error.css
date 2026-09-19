@@ -1,0 +1,82 @@
+/*--------------------------------------------------------------
+# Error Page
+--------------------------------------------------------------*/
+.error-page {
+    position: relative;
+    display: block;
+    padding: 120px 0 120px;
+    z-index: 1;
+}
+
+.error-page__inner {
+    position: relative;
+    display: block;
+    text-align: center;
+}
+
+.error-page__img {
+    position: relative;
+    display: block;
+    mix-blend-mode: luminosity;
+}
+
+.error-page__img img {
+    width: auto;
+}
+
+.error-page__tagline {
+    font-size: 40px;
+    line-height: 49px;
+    font-weight: 800;
+    color: var(--helpest-black);
+    text-transform: capitalize;
+    margin-bottom: 8px;
+}
+
+.error-page__text {
+    font-size: 20px;
+}
+
+.error-page__form {
+    position: relative;
+    display: block;
+    margin: 47px auto 20px;
+}
+
+.error-page__form-input {
+    position: relative;
+    display: block;
+    max-width: 550px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.error-page__form input[type="search"] {
+    height: 55px;
+    width: 100%;
+    outline: none;
+    background-color: var(--helpest-extra);
+    border: 0;
+    font-size: 16px;
+    color: var(--helpest-gray);
+    font-weight: 500;
+    padding-left: 30px;
+    padding-right: 55px;
+    border-radius: var(--helpest-bdr-radius);
+}
+
+.error-page__form button[type="submit"] {
+    background-color: transparent;
+    color: var(--helpest-black);
+    font-size: 22px;
+    position: absolute;
+    top: 0;
+    right: 0px;
+    bottom: 0;
+    width: 52px;
+    outline: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 0;
+}

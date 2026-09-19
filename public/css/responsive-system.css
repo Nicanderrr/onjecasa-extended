@@ -1,0 +1,125 @@
+/* Global responsive safeguards */
+html,
+body {
+    overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+
+/* Generic table fallback */
+table {
+    width: 100%;
+}
+
+/* Frontend + shared nav adjustments */
+@media (max-width: 991.98px) {
+    .navbar .container,
+    .navbar .container-fluid {
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
+    }
+
+    .navbar-collapse {
+        padding-top: 0.6rem;
+    }
+
+    .navbar-nav .nav-link {
+        padding-top: 0.55rem;
+        padding-bottom: 0.55rem;
+    }
+
+    .checkout-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .order-summary-section {
+        border-left: 0 !important;
+        border-top: 1px solid #edf2f7;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .checkout-form-section,
+    .order-summary-section {
+        padding: 1.1rem !important;
+    }
+
+    .checkout-header h2 {
+        font-size: 1.7rem !important;
+    }
+
+    .confirm-btn {
+        font-size: 1rem !important;
+        padding: 0.9rem !important;
+    }
+
+    .btn,
+    .nav-link {
+        white-space: normal;
+    }
+}
+
+/* Admin layout improvements */
+@media (max-width: 1199.98px) {
+    .body-wrapper {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .app-header .navbar {
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+    }
+
+    .dashboard-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .stats-grid,
+    .quick-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .welcome-card {
+        padding: 1.2rem !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .table,
+    .orders-table {
+        font-size: 0.82rem;
+    }
+
+    .dropdown-menu {
+        max-width: calc(100vw - 1.2rem);
+    }
+
+    .card,
+    .chart-card,
+    .recent-orders,
+    .stat-card {
+        border-radius: 14px !important;
+    }
+
+    .stat-value {
+        font-size: 1.7rem !important;
+    }
+}

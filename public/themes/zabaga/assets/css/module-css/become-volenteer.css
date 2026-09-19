@@ -1,0 +1,132 @@
+/*==============================================
+    Become Volunteer   
+===============================================*/
+.become-volunteer {
+    position: relative;
+    display: block;
+    padding: 90px 0 0;
+    z-index: 1;
+}
+
+.become-volunteer__single {
+    position: relative;
+    display: block;
+    text-align: center;
+    background-color: var(--helpest-black);
+    padding: 50px 50px 60px;
+    border-radius: var(--helpest-bdr-radius);
+    margin-bottom: 30px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.become-volunteer__single-2 {
+    background-color: var(--helpest-base);
+}
+
+.become-volunteer__single-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: .20;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+.become-volunteer__single-bg-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: .30;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+.become-volunteer__title {
+    font-size: 35px;
+    font-weight: 700;
+    line-height: 45px;
+    letter-spacing: 3.5px;
+    color: var(--helpest-white);
+    font-family: var(--helpest-font-three);
+}
+
+.become-volunteer__title a {
+    color: var(--helpest-white);
+}
+
+.become-volunteer__title a:hover {
+    color: var(--helpest-base);
+}
+
+.become-volunteer__text {
+    color: rgba(var(--helpest-white-rgb), .80);
+    margin-top: 19px;
+    margin-bottom: 20px;
+}
+
+.become-volunteer__btn-box {
+    position: relative;
+    display: block;
+}
+
+.become-volunteer__single-2 .become-volunteer__title a:hover {
+    color: var(--helpest-black);
+}
+
+.become-volunteer__btn-box .thm-btn {
+    color: var(--helpest-white);
+}
+
+.become-volunteer__btn-box-2 .thm-btn {
+    color: var(--helpest-white);
+    border: 1px solid var(--helpest-white);
+}
+
+.become-volunteer__btn-box-2 .thm-btn .thm-btn-icon-box {
+    background-color: var(--helpest-white);
+    color: var(--helpest-base);
+}
+
+.become-volunteer__btn-box-2 .thm-btn::before {
+    background-color: var(--helpest-white);
+}
+
+.become-volunteer__btn-box-2 .thm-btn::after {
+    background-color: rgba(var(--helpest-white-rgb), .30);
+}
+
+.become-volunteer__btn-box-2 .thm-btn:hover .thm-btn-icon-box {
+    background-color: var(--helpest-base);
+    color: var(--helpest-white);
+}
+
+.become-volunteer__btn-box-2 .thm-btn:hover {
+    color: var(--helpest-base);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*==============================================
+    End 
+===============================================*/

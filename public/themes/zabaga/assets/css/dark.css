@@ -1,0 +1,142 @@
+body,
+body .section-title__tagline::after,
+.donation-one__main-tab-box .tab-buttons,
+.testimonial-one__single {
+    background-color: var(--helpest-black);
+}
+
+
+
+
+
+
+.blog-one__content,
+.faq-one__left .faq-one-accrodion .accrodion,
+.donation-one__right,
+.testimonial-one,
+.team-one__single,
+.counter-one,
+.causes-one__content,
+.services-one__single {
+    background-color: #0b2823;
+}
+
+
+
+
+
+
+
+.blog-one__title a,
+.faq-one__left .faq-one-accrodion .accrodion.active .accrodion-title h4,
+.faq-one__left .faq-one-accrodion .accrodion-title h4,
+.donation-one__amount-title,
+.donation-one__main-tab-box .tab-buttons .tab-btn span,
+.donation-one__right-title,
+.testimonial-one__client-content h3>a,
+.team-one__title a,
+.counter-one__count,
+.causes-one__title a,
+.services-one__title a,
+.about-one__contact-box .content p a,
+.thm-btn,
+.about-one__points-content h3,
+.section-title__title {
+    color: var(--helpest-white);
+}
+
+
+
+
+
+
+
+.blog-one__read-more a,
+.blog-one__text,
+.blog-one__meta li p,
+.faq-one__left .faq-one-accrodion .accrodion-content p,
+.faq-one__text,
+.donation-one__inner .checked-box label,
+.donation-one__donate-box .donate-amount .amount-btn,
+.donation-one__donate-box .donate-amount input,
+.donation-one__donate-box .amount-btn-1,
+.testimonial-one__client-content p,
+.testimonial-one__text,
+.testimonial-one__ratting span.last-star,
+.team-one__sub-title,
+.counter-one__text,
+.causes-one__text,
+.services-one__read-more a,
+.services-one__text,
+.about-one__contact-box .content h3,
+.about-one__points-2 li p,
+.about-one__text {
+    color: rgba(var(--helpest-white-rgb), .50);
+}
+
+
+.donation-one__shape-1,
+.services-one__shape-1 {
+    filter: grayscale(1);
+}
+
+.causes-one__arrow a:hover {
+    background-color: var(--helpest-white);
+    color: var(--helpest-black);
+}
+
+.counter-one__bg {
+    filter: brightness(0.5);
+}
+
+.counter-one__single-shape {
+    background-color: rgba(var(--helpest-white-rgb), .10);
+}
+
+.brand-one {
+    border-top: 1px solid rgba(var(--helpest-white-rgb), .10);
+}
+
+
+
+.donation-one__donate-box .donate-amount .amount-btn,
+.donation-one__donate-box .donate-amount input,
+.donation-one__donate-box .amount-btn-1 {
+    border: 1px solid rgba(var(--helpest-white-rgb), .20);
+}
+
+.donation-one__inner .checked-box label>span:before {
+    border-bottom: 2px solid rgba(var(--helpest-white-rgb), .50);
+    border-right: 2px solid rgba(var(--helpest-white-rgb), .50);
+}
+
+.donation-one__inner .checked-box input[type="checkbox"]:checked+label>span {
+    border-color: rgba(var(--helpest-white-rgb), .20);
+}
+
+.brand-one__img {
+    filter: invert(1);
+}
+
+.testimonial-one__img-holder>img {
+    border: 5px solid rgba(var(--helpest-white-rgb), .15);
+}
+
+.donation-one__right-shape-1 {
+    opacity: .50;
+    mix-blend-mode: multiply;
+}
+
+.donation-one__right {
+    box-shadow: none;
+}
+
+.faq-one__img-3 {
+    border: 10px solid #0b2823;
+}
+
+.blog-one__shape-1 {
+    opacity: .05;
+}
+
+/* End */

@@ -1,0 +1,823 @@
+body.storefront-redesign {
+    background: #fef3c7;
+    color: #17120a;
+}
+
+html,
+body {
+    max-width: 100%;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+}
+
+.onjecasa-template-page {
+    background: #fef3c7;
+}
+
+.onjecasa-template-header .main-menu-three__top {
+    background: #111;
+}
+
+.onjecasa-template-header .main-menu-three__top-menu form {
+    margin: 0;
+}
+
+.onjecasa-template-header .main-menu-three__top-menu button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 800;
+}
+
+.onjecasa-template-main {
+    position: relative;
+    padding: 72px 0 84px;
+    background: #fef3c7;
+    overflow-x: clip;
+}
+
+.onjecasa-template-main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("/themes/zabaga/assets/images/shapes/banner-one-shape-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    opacity: .08;
+}
+
+.onjecasa-template-main > .container {
+    position: relative;
+    z-index: 1;
+}
+
+.onjecasa-template-footer {
+    margin-top: 0;
+}
+
+.store-header {
+    background: #111;
+    border-bottom: 6px solid #facc15;
+}
+
+.store-header-inner {
+    min-height: 98px;
+}
+
+.brand-mark {
+    color: #fff;
+    font-family: var(--helpest-font-two, serif);
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.brand-mark small {
+    color: #facc15;
+    font-family: var(--helpest-font, sans-serif);
+    font-weight: 900;
+}
+
+.brand-icon {
+    background: #facc15;
+    border: 4px solid #ec4899;
+    box-shadow: 7px 7px 0 #2563eb;
+}
+
+.header-search {
+    border: 3px solid #facc15;
+    border-radius: 0;
+    box-shadow: 8px 8px 0 #ec4899;
+}
+
+.header-search input,
+.search-submit {
+    font-weight: 900;
+}
+
+.search-submit,
+.desktop-nav-action-link,
+.flash-message {
+    background: #ec4899;
+    border-radius: 0;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.desktop-nav {
+    background: #2563eb;
+    border-bottom: 5px solid #111;
+}
+
+.desktop-nav-link {
+    color: #fff;
+    font-weight: 1000;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.desktop-nav-link.active,
+.desktop-nav-link:hover {
+    background: #facc15;
+    color: #111;
+}
+
+.icon-button {
+    border-radius: 0;
+    border: 3px solid #facc15;
+    background: #fef3c7;
+    color: #111;
+}
+
+.cart-badge {
+    background: #ec4899;
+    color: #fff;
+}
+
+.page-main {
+    padding-top: 48px;
+    padding-bottom: 60px;
+}
+
+.shop-panel,
+.shop-card,
+.product-card,
+.cart-summary,
+.checkout-card {
+    border: 3px solid #111;
+    border-radius: 0 !important;
+    box-shadow: 10px 10px 0 #facc15;
+}
+
+.btn,
+.btn-modern,
+.btn-primary,
+.btn-outline-modern,
+.quantity-btn,
+.bottom-nav a {
+    border-radius: 0 !important;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.store-footer {
+    background: #111;
+    border-top: 6px solid #ec4899;
+    color: #fff;
+}
+
+.store-footer a,
+.store-footer .muted-copy,
+.store-footer h6 {
+    color: #fff !important;
+}
+
+.shop-chip {
+    border-radius: 0;
+    background: #facc15;
+    color: #111;
+    font-weight: 900;
+}
+
+.product-card {
+    overflow: hidden;
+}
+
+.product-media,
+.product-card .product-media,
+.related-product-card .product-media {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    min-height: 0 !important;
+    overflow: hidden;
+    background: #fef3c7;
+}
+
+.product-media.media-beverages[style] {
+    min-height: 0 !important;
+}
+
+.product-media img,
+.product-media video,
+.product-card .product-media img,
+.product-card .product-media video,
+.related-product-card .product-media img,
+.related-product-card .product-media video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+}
+
+.product-media .product-badge {
+    position: absolute;
+    z-index: 2;
+}
+
+.shop-card > .product-media {
+    aspect-ratio: 5 / 4;
+}
+
+.product-gallery-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+    gap: .75rem;
+    padding: .9rem;
+}
+
+.product-gallery-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    overflow: hidden;
+    border: 3px solid #111;
+    background: #fff;
+}
+
+.product-gallery-thumb img,
+.product-gallery-thumb video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.line-thumb,
+.cart-line img,
+.checkout-line img,
+.order-line img {
+    width: 86px !important;
+    height: 86px !important;
+    flex: 0 0 86px;
+    object-fit: cover;
+    object-position: center;
+    overflow: hidden;
+}
+
+.bottom-nav {
+    border-top: 5px solid #111;
+    background: #facc15;
+}
+
+.bottom-nav a {
+    color: #111;
+}
+
+.bottom-nav a.active {
+    background: #ec4899;
+    color: #fff;
+}
+
+@media (max-width: 767px) {
+    .shop-card > .product-media {
+        aspect-ratio: 4 / 3;
+    }
+
+    .line-thumb,
+    .cart-line img,
+    .checkout-line img,
+    .order-line img {
+        width: 72px !important;
+        height: 72px !important;
+        flex-basis: 72px;
+    }
+}
+
+.meal-extra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: .75rem;
+}
+
+.meal-extra-card {
+    display: grid;
+    grid-template-columns: 24px 44px 1fr 64px;
+    gap: .65rem;
+    align-items: center;
+    min-height: 82px;
+    padding: .75rem;
+    border: 3px solid #111;
+    background: #fff;
+    box-shadow: 5px 5px 0 #facc15;
+    cursor: pointer;
+}
+
+.meal-extra-card input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #ec4899;
+}
+
+.meal-extra-card.is-selected {
+    background: #fef3c7;
+    border-color: #ec4899;
+    box-shadow: 5px 5px 0 #2563eb;
+}
+
+.meal-extra-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: #2563eb;
+    color: #fff;
+    border: 2px solid #111;
+    font-size: 1.2rem;
+}
+
+.meal-extra-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.meal-extra-body strong,
+.meal-extra-body small {
+    display: block;
+}
+
+.meal-extra-body strong {
+    color: #111;
+    font-weight: 1000;
+}
+
+.meal-extra-body small {
+    color: #ec4899;
+    font-weight: 900;
+}
+
+.meal-extra-qty {
+    width: 64px;
+    height: 42px;
+    border: 2px solid #111;
+    text-align: center;
+    font-weight: 900;
+}
+
+.meal-extra-qty:disabled {
+    opacity: .45;
+}
+
+.onjecasa-mobile-rail {
+    scrollbar-color: #ec4899 #fef3c7;
+    scrollbar-width: thin;
+}
+
+.onjecasa-mobile-rail::-webkit-scrollbar {
+    height: 9px;
+}
+
+.onjecasa-mobile-rail::-webkit-scrollbar-track {
+    background: #fef3c7;
+    border: 2px solid #111;
+}
+
+.onjecasa-mobile-rail::-webkit-scrollbar-thumb {
+    background: #ec4899;
+    border: 2px solid #111;
+}
+
+@media (min-width: 768px) {
+    .onjecasa-template-main {
+        background-attachment: fixed;
+    }
+
+    .page-header__bg,
+    .causes-three__bg,
+    .site-footer-two__bg {
+        background-attachment: fixed;
+    }
+}
+
+@media (max-width: 991px) {
+    .onjecasa-template-main {
+        padding: 44px 0 72px;
+    }
+
+    .page-main {
+        padding-top: 30px;
+        padding-bottom: 44px;
+    }
+
+    .page-wrapper,
+    .onjecasa-template-page,
+    .onjecasa-template-main {
+        overflow-x: clip;
+    }
+
+    .container,
+    .container-fluid {
+        max-width: 100%;
+    }
+
+    .section-title {
+        margin-bottom: 28px;
+    }
+
+    .section-title__title {
+        font-size: clamp(32px, 8vw, 48px);
+        line-height: 1.05;
+        letter-spacing: 0;
+    }
+
+    .section-title__title br,
+    .about-three__points p br {
+        display: none;
+    }
+
+    .page-header {
+        min-height: 220px;
+        padding: 86px 0 72px;
+    }
+
+    .page-header__inner h2,
+    .page-header__inner .page-title,
+    .page-header__inner h1 {
+        font-size: clamp(34px, 10vw, 58px);
+        line-height: 1;
+        overflow-wrap: anywhere;
+    }
+
+    .shop-panel,
+    .shop-card,
+    .product-card,
+    .cart-summary,
+    .checkout-card {
+        box-shadow: 6px 6px 0 #facc15;
+    }
+
+    .about-three__left,
+    .about-three__right {
+        max-width: 100%;
+    }
+
+    .about-three__img-box {
+        margin-right: 0;
+    }
+
+    .about-three__points li {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    body.storefront-redesign {
+        overflow-x: hidden;
+    }
+
+    .onjecasa-template-main {
+        padding: 28px 0 80px;
+    }
+
+    .page-main {
+        padding-top: 18px;
+    }
+
+    .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .page-header {
+        min-height: 190px;
+        padding: 72px 0 58px;
+    }
+
+    .thm-btn,
+    .btn,
+    .btn-modern,
+    .btn-primary,
+    .btn-outline-modern {
+        min-height: 46px;
+        white-space: normal;
+    }
+
+    .causes-three .row,
+    .team-three .row,
+    .event-one .row,
+    .why-choose-one .row,
+    .brand-one .owl-stage,
+    .orders-summary,
+    .checkout-layout,
+    .cart-layout {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 16px;
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 2px 16px 16px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 16px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .causes-three .row,
+    .team-three .row,
+    .event-one .row,
+    .why-choose-one .row,
+    .orders-summary,
+    .checkout-layout,
+    .cart-layout {
+        scrollbar-color: #ec4899 #fef3c7;
+        scrollbar-width: thin;
+    }
+
+    .causes-three .row::-webkit-scrollbar,
+    .team-three .row::-webkit-scrollbar,
+    .event-one .row::-webkit-scrollbar,
+    .why-choose-one .row::-webkit-scrollbar,
+    .orders-summary::-webkit-scrollbar,
+    .checkout-layout::-webkit-scrollbar,
+    .cart-layout::-webkit-scrollbar {
+        height: 9px;
+    }
+
+    .causes-three .row::-webkit-scrollbar-thumb,
+    .team-three .row::-webkit-scrollbar-thumb,
+    .event-one .row::-webkit-scrollbar-thumb,
+    .why-choose-one .row::-webkit-scrollbar-thumb,
+    .orders-summary::-webkit-scrollbar-thumb,
+    .checkout-layout::-webkit-scrollbar-thumb,
+    .cart-layout::-webkit-scrollbar-thumb {
+        background: #ec4899;
+        border: 2px solid #111;
+    }
+
+    .causes-three .row > [class*="col-"],
+    .team-three .row > [class*="col-"],
+    .event-one .row > [class*="col-"],
+    .why-choose-one .row > [class*="col-"],
+    .orders-summary > *,
+    .checkout-layout > *,
+    .cart-layout > * {
+        flex: 0 0 min(84vw, 360px);
+        max-width: min(84vw, 360px);
+        scroll-snap-align: start;
+    }
+
+    .checkout-layout > *,
+    .cart-layout > * {
+        flex-basis: min(90vw, 390px);
+        max-width: min(90vw, 390px);
+    }
+
+    .onjecasa-products-page .product__all-tab-single > .row,
+    .onjecasa-product-details .related-products-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-left: 0;
+        margin-right: 0;
+        overflow: visible;
+    }
+
+    .onjecasa-products-page .product__all-tab-single > .row > [class*="col-"],
+    .onjecasa-product-details .related-products-grid > [class*="col-"] {
+        width: auto;
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .onjecasa-products-page .single-product-style1,
+    .onjecasa-product-details .related-products-grid .single-product-style1 {
+        height: 100%;
+    }
+
+    .onjecasa-products-page .single-product-style1__img,
+    .onjecasa-product-details .related-products-grid .single-product-style1__img {
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+    }
+
+    .onjecasa-products-page .single-product-style1__content,
+    .onjecasa-product-details .related-products-grid .single-product-style1__content {
+        gap: 8px;
+        padding: 12px 4px 0;
+    }
+
+    .causes-three,
+    .team-three,
+    .event-one,
+    .why-choose-one,
+    .brand-one {
+        overflow: hidden;
+    }
+
+    .causes-three__single,
+    .team-three__single,
+    .event-one__single,
+    .why-choose-one__single,
+    .product-card,
+    .shop-card,
+    .checkout-card,
+    .cart-summary {
+        height: 100%;
+    }
+
+    .event-one__single-2,
+    .event-one__single-3,
+    .event-one__single-4,
+    .event-one__single-5 {
+        margin-top: 0;
+    }
+
+    .line-thumb,
+    .cart-line img,
+    .checkout-line img,
+    .order-line img {
+        width: 72px !important;
+        height: 72px !important;
+        flex-basis: 72px;
+    }
+
+    .cart-line,
+    .checkout-line,
+    .order-line {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .product-gallery-strip {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+    }
+
+    .product-gallery-thumb {
+        flex: 0 0 76px;
+        scroll-snap-align: start;
+    }
+
+    .meal-extra-grid {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 12px;
+        scroll-snap-type: x mandatory;
+    }
+
+    .meal-extra-card {
+        flex: 0 0 min(86vw, 330px);
+        grid-template-columns: 22px 42px minmax(0, 1fr) 58px;
+        scroll-snap-align: start;
+    }
+
+    .footer-widget-two__form {
+        max-width: 100%;
+    }
+
+    .site-footer-three .site-footer-two__top,
+    .onjecasa-template-footer .site-footer-two__top {
+        margin-top: 0;
+    }
+
+    .site-footer-three .site-footer-two__top-inner,
+    .onjecasa-template-footer .site-footer-two__top-inner {
+        padding: 20px 0 12px !important;
+    }
+
+    .site-footer-two__shape-1,
+    .site-footer-two__content-and-social-box {
+        display: none;
+    }
+
+    .footer-widget-two__about,
+    .footer-widget-two__services,
+    .footer-widget-two__links,
+    .footer-widget-two__contact {
+        margin: 0 0 10px !important;
+    }
+
+    .footer-widget-two__about-logo img {
+        max-width: 76px !important;
+        max-height: 40px !important;
+    }
+
+    .footer-widget-two__about-text {
+        display: none;
+    }
+
+    .footer-widget-two__title {
+        margin-bottom: 5px;
+        font-size: 13px;
+        line-height: 1.2;
+    }
+
+    .footer-widget-two__services-list,
+    .footer-widget-two__contact-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px 12px;
+    }
+
+    .footer-widget-two__services-list li+li,
+    .footer-widget-two__contact-list li+li {
+        margin-top: 0;
+    }
+
+    .footer-widget-two__services-list li a,
+    .footer-widget-two__contact-list li p,
+    .footer-widget-two__contact-list li p a {
+        font-size: 11px;
+        line-height: 1.25;
+    }
+
+    .footer-widget-two__contact-list li {
+        gap: 5px;
+    }
+
+    .footer-widget-two__contact-list li .icon span {
+        font-size: 11px;
+    }
+
+    .footer-widget-two__input input[type="search"],
+    .footer-widget-two__input input[type="email"] {
+        height: 34px;
+        font-size: 12px;
+        padding-left: 11px;
+        padding-right: 38px;
+    }
+
+    .footer-widget-two__btn {
+        width: 28px;
+        height: 28px;
+        right: 3px;
+    }
+
+    .site-footer-two__bottom-inner {
+        display: grid;
+        justify-items: start;
+        gap: 5px;
+        padding: 8px 0;
+    }
+
+    .site-footer-two__copyright-text,
+    .site-footer-two__bottom-menu li a {
+        font-size: 10px;
+        line-height: 1.2;
+    }
+
+    .site-footer-two__bottom-menu li+li {
+        margin-left: 8px;
+    }
+}
+
+@media (max-width: 575px) {
+    .onjecasa-template-main {
+        padding-top: 18px;
+    }
+
+    .section-title__tagline {
+        font-size: 15px;
+    }
+
+    .section-title__title {
+        font-size: clamp(28px, 9vw, 38px);
+    }
+
+    .page-header {
+        min-height: 166px;
+        padding: 58px 0 48px;
+    }
+
+    .shop-panel,
+    .shop-card,
+    .product-card,
+    .cart-summary,
+    .checkout-card {
+        border-width: 2px;
+        box-shadow: 4px 4px 0 #facc15;
+    }
+
+    .line-thumb,
+    .cart-line img,
+    .checkout-line img,
+    .order-line img {
+        width: 64px !important;
+        height: 64px !important;
+        flex-basis: 64px;
+    }
+
+    .meal-extra-card {
+        min-height: 76px;
+        padding: .65rem;
+    }
+}

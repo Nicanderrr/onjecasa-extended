@@ -1,0 +1,439 @@
+/*--------------------------------------------------------------
+# Project page
+--------------------------------------------------------------*/
+.projects-page {
+    position: relative;
+    display: block;
+    padding: 120px 0 90px;
+    z-index: 1;
+}
+
+.projects-page__single {
+    position: relative;
+    display: block;
+    margin-bottom: 30px;
+}
+
+.projects-page__img {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--helpest-bdr-radius);
+    z-index: 1;
+}
+
+.projects-page__img:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    content: "";
+    background-color: rgba(var(--helpest-base-rgb), 0.7);
+    -webkit-transition: all 700ms ease;
+    transition: all 700ms ease;
+    -webkit-transform: translateY(-102%);
+    transform: translateY(-102%);
+    border-radius: var(--sopot-bdr-radius);
+    z-index: 1;
+}
+
+.projects-page ul li:nth-child(2) .projects-page__img:before {
+    background-color: rgba(var(--helpest-primary-rgb), 0.7);
+}
+
+.projects-page ul li:nth-child(3) .projects-page__img:before {
+    background-color: rgba(var(--helpest-secondary-rgb), 0.7);
+}
+
+.projects-page ul li:nth-child(4) .projects-page__img:before {
+    background-color: rgba(119, 38, 235, 0.7);
+}
+
+.projects-page ul li:nth-child(5) .projects-page__img:before {
+    background-color: rgba(72, 177, 188, 0.7);
+}
+
+.projects-page ul li:nth-child(6) .projects-page__img:before {
+    background-color: rgba(255, 60, 207, 0.7);
+}
+
+.projects-page ul li:nth-child(7) .projects-page__img:before {
+    background-color: rgba(13, 202, 240, 0.7);
+}
+
+.projects-page__single:hover .projects-page__img:before {
+    -webkit-transform: translateY(0%);
+    transform: translateY(0%);
+}
+
+.projects-page__img img {
+    width: 100%;
+    border-radius: var(--helpest-bdr-radius);
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: -webkit-transform 500ms ease;
+    transition: -webkit-transform 500ms ease;
+    transition: transform 500ms ease;
+    transition: transform 500ms ease, -webkit-transform 500ms ease;
+}
+
+.projects-page__single:hover .projects-page__img img {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.projects-page__icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.projects-page__icon a {
+    height: 80px;
+    width: 80px;
+    background-color: var(--helpest-black);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 22px;
+    color: var(--helpest-white);
+    -webkit-transform: translateY(100px);
+    transform: translateY(100px);
+    opacity: 0;
+    -webkit-transition: all 700ms ease;
+    transition: all 700ms ease;
+    z-index: 2;
+}
+
+.projects-page__single:hover .projects-page__icon a {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: var(--helpest-base);
+}
+
+.projects-page ul li:nth-child(2) .projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: var(--helpest-primary);
+}
+
+.projects-page ul li:nth-child(3) .projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: var(--helpest-secondary);
+}
+
+.projects-page ul li:nth-child(4) .projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: #7726eb;
+}
+
+.projects-page ul li:nth-child(5) .projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: #48B1BC;
+}
+
+.projects-page ul li:nth-child(6) .projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: #e13ccf;
+}
+
+.projects-page ul li:nth-child(7) .projects-page__icon a:hover {
+    background-color: var(--helpest-white);
+    color: #0dcaf0;
+}
+
+/*==============================================
+    Project Details
+===============================================*/
+.project-details {
+    position: relative;
+    display: block;
+    padding: 120px 0 120px;
+    z-index: 1;
+}
+
+.project-details__img {
+    position: relative;
+    display: block;
+}
+
+.project-details__img img {
+    width: 100%;
+    border-radius: var(--helpest-bdr-radius);
+}
+
+.project-details__info-box {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    max-width: 586px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--helpest-bdr-radius);
+}
+
+.project-details__info-title-box {
+    position: relative;
+    display: block;
+    background-color: var(--helpest-base);
+    text-align: center;
+    padding: 11px 10px 8px;
+}
+
+.project-details__info-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 28px;
+    color: var(--helpest-white);
+}
+
+.project-details__info-and-social {
+    position: relative;
+    display: flex;
+    border: 1px solid rgba(var(--helpest-black-rgb), .15);
+    background-color: var(--helpest-white);
+    border-top: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 30px 30px;
+    border-bottom-left-radius: var(--helpest-bdr-radius);
+    border-bottom-right-radius: var(--helpest-bdr-radius);
+}
+
+.project-details__info {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.project-details__info-list {
+    position: relative;
+    display: block;
+}
+
+.project-details__info-list li {
+    position: relative;
+    display: block;
+}
+
+.project-details__info-list li+li {
+    margin-top: 20px;
+}
+
+.project-details__info-list li p {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 28px;
+    font-family: var(--helpest-font-two);
+    color: var(--helpest-black);
+}
+
+.project-details__info-list li p span {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: var(--helpest-font);
+    color: var(--helpest-gray);
+    margin-left: 10px;
+}
+
+.project-details__social {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.project-details__social a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--helpest-base);
+    border-radius: 50%;
+    font-size: 14px;
+    color: var(--helpest-base);
+}
+
+.project-details__social a:hover {
+    background-color: var(--helpest-base);
+    color: var(--helpest-white);
+}
+
+.project-details__left {
+    position: relative;
+    display: block;
+    margin-top: 50px;
+}
+
+.project-details__title-1 {
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 60px;
+    margin-bottom: 19px;
+}
+
+.project-details__text-2 {
+    margin-top: 20px;
+    margin-bottom: 19px;
+}
+
+.project-details__points {
+    position: relative;
+    display: block;
+}
+
+.project-details__points li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.project-details__points li+li {
+    margin-top: 11px;
+}
+
+.project-details__points li .icon {
+    position: relative;
+    display: inline-block;
+}
+
+.project-details__points li .icon span {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+    color: var(--helpest-base);
+}
+
+.project-details__points li p {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 28px;
+    font-family: var(--helpest-font-two);
+    color: var(--helpest-black);
+}
+
+.project-details__title-2 {
+    font-size: 25px;
+    font-weight: 800;
+    line-height: 30px;
+    margin-top: 29px;
+    margin-bottom: 22px;
+}
+
+.project-details__right {
+    position: relative;
+    display: block;
+    margin-top: 30px;
+}
+
+.project-details__right-img-1 {
+    position: relative;
+    display: block;
+    margin-bottom: 30px;
+}
+
+.project-details__right-img-1 img {
+    width: 100%;
+    border-radius: var(--helpest-bdr-radius);
+}
+
+.project-details__right-img-2 {
+    position: relative;
+    display: block;
+}
+
+.project-details__right-img-2 img {
+    width: 100%;
+    border-radius: var(--helpest-bdr-radius);
+}
+
+.project-details__pagination {
+    position: relative;
+    display: block;
+    text-align: center;
+    border-top: 1px solid #E3E3E3;
+    border-bottom: 1px solid #E3E3E3;
+    margin-top: 30px;
+}
+
+.project-details__pagination .pg-pagination {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px 0 30px;
+}
+
+.project-details__pagination .pg-pagination li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.project-details__pagination .pg-pagination li a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: var(--helpest-black);
+    gap: 20px;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: var(--helpest-font-two);
+    border-radius: 50%;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.project-details__pagination .pg-pagination li a:hover {
+    color: var(--helpest-base);
+}
+
+.project-details__pagination .pg-pagination li a i {
+    color: var(--helpest-base);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-weight: 900;
+    background-color: var(--helpest-extra);
+    border-radius: 50%;
+    font-size: 16px;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
+.project-details__pagination .pg-pagination li:hover a i {
+    color: var(--helpest-white);
+    background-color: var(--helpest-base);
+}

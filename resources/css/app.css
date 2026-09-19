@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}
+
+:root {
+    --onjecasa-ink: #102a1f;
+    --onjecasa-green: #2f9b55;
+    --onjecasa-leaf: #57bd68;
+    --onjecasa-red: #d8322a;
+    --onjecasa-gold: #f4b63f;
+    --onjecasa-cream: #f8f3e8;
+}
+
+.onjecasa-auth-body {
+    background:
+        radial-gradient(circle at 15% 10%, rgba(47, 155, 85, 0.14), transparent 28%),
+        radial-gradient(circle at 86% 8%, rgba(244, 182, 63, 0.2), transparent 22%),
+        linear-gradient(180deg, #fffaf0 0%, var(--onjecasa-cream) 52%, #edf7ef 100%);
+}
+
+.onjecasa-auth-body > div > div:last-child,
+.onjecasa-auth-body .bg-white {
+    border: 1px solid rgba(16, 42, 31, 0.1);
+    box-shadow: 0 20px 50px rgba(16, 42, 31, 0.12);
+}
+
+.onjecasa-auth-body .bg-gray-800,
+.onjecasa-auth-body button[type="submit"] {
+    background-color: var(--onjecasa-ink) !important;
+}
+
+.onjecasa-auth-body .focus\:ring-indigo-500:focus,
+.onjecasa-auth-body input:focus,
+.onjecasa-auth-body textarea:focus,
+.onjecasa-auth-body select:focus {
+    --tw-ring-color: rgba(47, 155, 85, 0.45) !important;
+    border-color: var(--onjecasa-green) !important;
+}
+
+.onjecasa-auth-body a {
+    color: var(--onjecasa-green);
+}
