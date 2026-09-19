@@ -40,6 +40,10 @@ run 'php artisan migrate' after creating the database
 if there's an issue with the design or alignment(which there shouldnt), run 'npm install' then 'npm run dev'
 
 
+## Hostinger deployment
+
+See [docs/hostinger-deployment.md](docs/hostinger-deployment.md) for the production document-root layout, environment configuration, Composer and Artisan commands, permissions, cron, and Paystack checks.
+
 ## admin assignment
 \App\Models\User::where('id', '1')->update(['is_admin' => '1')]);
 

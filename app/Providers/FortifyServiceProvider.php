@@ -20,7 +20,9 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // This application defines its authentication routes in routes/auth.php.
+        // Prevent Fortify from registering a second overlapping route set.
+        Fortify::ignoreRoutes();
     }
 
     /**
