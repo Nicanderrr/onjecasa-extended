@@ -201,6 +201,9 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:admin')->prefix('pos-admin')->name('pos.admin.')->group(function () {
         Route::get('/dashboard', [PosDashboardController::class, 'index'])->name('dashboard');
         Route::resource('products', PosProductCrudController::class)->except(['show']);
+        Route::get('products-import', [PosProductCrudController::class, 'importForm'])->name('products.import');
+        Route::get('products-import/template', [PosProductCrudController::class, 'downloadImportTemplate'])->name('products.import.template');
+        Route::post('products-import', [PosProductCrudController::class, 'import'])->name('products.import.store');
         Route::resource('categories', PosCategoryCrudController::class)->except(['show']);
         Route::resource('staff', PosStaffCrudController::class)->except(['show']);
         Route::resource('users', PosSystemUserController::class)->except(['show']);

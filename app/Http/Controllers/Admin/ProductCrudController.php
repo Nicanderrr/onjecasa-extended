@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductCrudController extends Controller
 {
@@ -23,6 +25,176 @@ class ProductCrudController extends Controller
     public function create(): View
     {
         return view('pos_admin.products.create');
+    }
+
+    public function importForm(): View
+    {
+        return view('pos_admin.products.import');
+    }
+
+    public function downloadImportTemplate(): BinaryFileResponse
+    {
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->fromArray([
+            ['code', 'name', 'description', 'price', 'stock', 'image'],
+            ['SKU-001', 'Example Product', 'Product description', 25.00, 10, ''],
+        ]);
+
+        $path = storage_path('app/product-import-template.xlsx');
+        (new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet))->save($path);
+
+        return response()->download($path, 'onje-casa-products-template.xlsx')->deleteFileAfterSend(true);
+    }
+
+    public function import(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'file' => ['required', 'file', 'max:51200'],
+            'import_type' => ['required', 'in:spreadsheet,sql'],
+            'sync_to_website' => ['nullable', 'boolean'],
+        ]);
+
+        $extension = strtolower($request->file('file')->getClientOriginalExtension());
+        if (! in_array($extension, ['csv', 'txt', 'xls', 'xlsx', 'sql'], true)) {
+            return back()->with('error', 'Upload a CSV, Excel, or MySQL SQL file.')->withInput();
+        }
+
+        $branchId = BranchContext::activeId();
+        if (! $branchId) {
+            return back()->with('error', 'Select a branch before importing products.');
+        }
+
+        try {
+            $result = $data['import_type'] === 'sql'
+                ? $this->importSql($request->file('file'), $branchId)
+                : $this->importSpreadsheet($request->file('file'), $branchId, $request->boolean('sync_to_website'));
+        } catch (\Throwable $exception) {
+            report($exception);
+            return back()->with('error', 'Import failed: ' . $exception->getMessage());
+        }
+
+        return redirect()->route('pos.admin.products.index')->with('success', $result);
+    }
+
+    private function importSpreadsheet($file, int $branchId, bool $syncToWebsite): string
+    {
+        $spreadsheet = IOFactory::load($file->getRealPath());
+        $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        $headers = $this->importHeaders(array_shift($rows) ?: []);
+        $required = ['name', 'price', 'stock'];
+        if (array_diff($required, array_keys($headers))) {
+            throw new \RuntimeException('Spreadsheet must include name, price, and stock columns.');
+        }
+
+        $created = 0;
+        $updated = 0;
+        DB::transaction(function () use ($rows, $headers, $branchId, $syncToWebsite, &$created, &$updated) {
+            foreach ($rows as $number => $row) {
+                $values = $this->importRow($row, $headers);
+                if (trim((string) ($values['name'] ?? '')) === '') {
+                    continue;
+                }
+
+                $code = trim((string) ($values['code'] ?? '')) ?: $this->makeUniqueCode((string) $values['name'], $branchId);
+                $existing = DB::table('pos_products')->where('branch_id', $branchId)->where('code', $code)->first();
+                $payload = [
+                    'branch_id' => $branchId,
+                    'code' => $code,
+                    'name' => trim((string) $values['name']),
+                    'description' => trim((string) ($values['description'] ?? '')),
+                    'price' => $this->importNumber($values['price'] ?? null, 'price', $number + 2),
+                    'stock' => $this->importInteger($values['stock'] ?? null, 'stock', $number + 2),
+                    'image' => trim((string) ($values['image'] ?? '')) ?: null,
+                    'updated_at' => now(),
+                ];
+
+                if ($existing) {
+                    DB::table('pos_products')->where('id', $existing->id)->update($payload);
+                    $updated++;
+                    $productId = (int) $existing->id;
+                } else {
+                    $payload['created_at'] = now();
+                    $productId = (int) DB::table('pos_products')->insertGetId($payload);
+                    $created++;
+                }
+
+                $product = DB::table('pos_products')->where('id', $productId)->first();
+                BranchProductSync::restore($branchId, $code);
+                BranchProductSync::syncProductToBranches($product, syncStock: true);
+                if ($syncToWebsite) {
+                    $this->syncPosProductToWebsite($productId, false);
+                }
+            }
+        });
+
+        return "Product import complete: {$created} created, {$updated} updated.";
+    }
+
+    private function importSql($file, int $branchId): string
+    {
+        $sql = file_get_contents($file->getRealPath());
+        $sql = preg_replace('/^\\s*(--|#).*$/m', '', (string) $sql);
+        $sql = trim((string) $sql);
+        if ($sql === '' || ! preg_match('/\\b(?:INSERT|REPLACE)\\s+(?:IGNORE\\s+)?INTO\\s+[`"]?pos_products[`"]?/i', $sql)) {
+            throw new \RuntimeException('SQL file must contain INSERT or REPLACE statements for pos_products.');
+        }
+        if (preg_match('/\\b(?:DROP|ALTER|TRUNCATE|DELETE|UPDATE|CREATE|GRANT|REVOKE)\\b/i', $sql)) {
+            throw new \RuntimeException('SQL import only accepts product INSERT or REPLACE statements.');
+        }
+
+        $statements = array_filter(array_map('trim', preg_split('/;\\s*(?:\r?\n|$)/', $sql)));
+        $count = 0;
+        DB::transaction(function () use ($statements, $branchId, &$count) {
+            foreach ($statements as $statement) {
+                if (! preg_match('/^\\s*(?:INSERT|REPLACE)\\s+(?:IGNORE\\s+)?INTO\\s+[`"]?pos_products[`"]?/i', $statement)) {
+                    throw new \RuntimeException('SQL file contains an unsupported statement.');
+                }
+                DB::unprepared($statement);
+                $count++;
+            }
+            DB::table('pos_products')->whereNull('branch_id')->update(['branch_id' => $branchId]);
+        });
+
+        return "SQL product import complete: {$count} statement(s) executed.";
+    }
+
+    private function importHeaders(array $row): array
+    {
+        $headers = [];
+        foreach ($row as $column => $value) {
+            $key = Str::of((string) $value)->lower()->replace([' ', '-'], '_')->toString();
+            if ($key !== '') {
+                $headers[$key] = $column;
+            }
+        }
+        return $headers;
+    }
+
+    private function importRow(array $row, array $headers): array
+    {
+        $values = [];
+        foreach ($headers as $key => $column) {
+            $values[$key] = $row[$column] ?? null;
+        }
+        return $values;
+    }
+
+    private function importNumber(mixed $value, string $field, int $line): float
+    {
+        $value = str_replace([',', 'GHC', 'GH₵'], '', trim((string) $value));
+        if ($value === '' || ! is_numeric($value) || (float) $value < 0) {
+            throw new \RuntimeException("Invalid {$field} on row {$line}.");
+        }
+        return (float) $value;
+    }
+
+    private function importInteger(mixed $value, string $field, int $line): int
+    {
+        if (filter_var($value, FILTER_VALIDATE_INT) === false || (int) $value < 0) {
+            throw new \RuntimeException("Invalid {$field} on row {$line}.");
+        }
+        return (int) $value;
     }
 
     public function store(Request $request): RedirectResponse

@@ -5,6 +5,9 @@
 @section('page-title', 'Products')
 @section('page-description', 'Track stock levels, pricing, and catalog updates from one compact view.')
 @section('page-actions')
+  <a href="{{ route('pos.admin.products.import') }}" class="btn btn-outline-primary btn-sm">
+    <i class="bi bi-upload"></i> Import Products
+  </a>
   <a href="{{ route('pos.admin.products.create') }}" class="btn btn-primary btn-sm">
     <i class="fas fa-utensils"></i> Add Product
   </a>
