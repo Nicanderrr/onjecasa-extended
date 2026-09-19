@@ -29,6 +29,12 @@ class PageController extends Controller
                 'product_count' => DB::table('pos_products')->where('branch_id', $branchId)->count(),
                 'order_count' => DB::table('pos_orders')->where('branch_id', $branchId)->count(),
                 'sales_total' => (float) DB::table('pos_payments as p')->join('pos_orders as o', 'o.id', '=', 'p.order_id')->where('o.branch_id', $branchId)->sum('p.amount'),
+                'profit_total' => (float) DB::table('pos_order_items as i')
+                    ->join('pos_products as p', 'p.id', '=', 'i.product_id')
+                    ->join('pos_orders as o', 'o.id', '=', 'i.order_id')
+                    ->where('o.branch_id', $branchId)
+                    ->selectRaw('COALESCE(SUM((i.price - COALESCE(i.cost_price, p.cost_price, 0)) * i.qty), 0) as total')
+                    ->value('total'),
             ],
         ];
 

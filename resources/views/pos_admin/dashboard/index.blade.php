@@ -22,7 +22,7 @@
 </section>
 
 <section class="row g-3 mt-1 dashboard-metrics" aria-label="Dashboard metrics">
-  <div class="col-12 col-sm-6 col-xl-3">
+  <div class="col-12 col-sm-6 col-xl">
     <a class="metric-card metric-link metric-primary" href="{{ route('pos.admin.products.index') }}" aria-label="Open products">
       <div class="metric-top">
         <span class="metric-label">Products</span>
@@ -33,7 +33,7 @@
     </a>
   </div>
 
-  <div class="col-12 col-sm-6 col-xl-3">
+  <div class="col-12 col-sm-6 col-xl">
     <a class="metric-card metric-link metric-success" href="{{ route('pos.admin.orders.index') }}" aria-label="Open orders">
       <div class="metric-top">
         <span class="metric-label">Orders</span>
@@ -44,7 +44,7 @@
     </a>
   </div>
 
-  <div class="col-12 col-sm-6 col-xl-3">
+  <div class="col-12 col-sm-6 col-xl">
     <a class="metric-card metric-link metric-warning" href="{{ route('pos.admin.sales.index') }}" aria-label="Open sales">
       <div class="metric-top">
         <span class="metric-label">Sales</span>
@@ -55,7 +55,18 @@
     </a>
   </div>
 
-  <div class="col-12 col-sm-6 col-xl-3">
+  <div class="col-12 col-sm-6 col-xl">
+    <a class="metric-card metric-link metric-success" href="{{ route('pos.admin.sales.index') }}" aria-label="View estimated profit">
+      <div class="metric-top">
+        <span class="metric-label">Profit</span>
+        <span class="metric-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span>
+      </div>
+      <div class="metric-value">{{ number_format($stats['profit_total'], 2) }}</div>
+      <div class="metric-meta"><span class="text-success">Estimated</span><span>after product cost</span></div>
+    </a>
+  </div>
+
+  <div class="col-12 col-sm-6 col-xl">
     <a class="metric-card metric-link metric-danger" href="{{ route('pos.admin.staff.index') }}" aria-label="Open cashiers">
       <div class="metric-top">
         <span class="metric-label">Active Cashiers</span>

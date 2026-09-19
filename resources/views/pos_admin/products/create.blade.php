@@ -230,6 +230,21 @@
         <section class="pos-product-panel">
           <div class="pos-panel-heading">
             <div>
+              <strong>Cost Price</strong>
+              <span>What this item costs the business per unit.</span>
+            </div>
+            <span class="pos-panel-icon"><i class="fas fa-truck-loading"></i></span>
+          </div>
+          <div class="form-group mb-0">
+            <label>Cost Price</label>
+            <input type="number" step="0.01" min="0" name="cost_price" value="{{ old('cost_price') }}" class="form-control" placeholder="0.00" required>
+            <div class="form-hint">Profit per unit is calculated from selling price minus cost price.</div>
+          </div>
+        </section>
+
+        <section class="pos-product-panel">
+          <div class="pos-panel-heading">
+            <div>
               <strong>Stock Quantity</strong>
               <span>Available units for in-store selling.</span>
             </div>

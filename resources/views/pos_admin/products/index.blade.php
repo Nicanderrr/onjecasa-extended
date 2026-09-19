@@ -17,11 +17,12 @@
 @php
   $lowStock = $products->filter(fn ($prod) => (int) ($prod->stock ?? 0) <= 10)->count();
   $inventoryValue = $products->sum(fn ($prod) => (float) ($prod->price ?? 0) * (int) ($prod->stock ?? 0));
+  $potentialProfit = $products->sum(fn ($prod) => ((float) ($prod->price ?? 0) - (float) ($prod->cost_price ?? 0)) * (int) ($prod->stock ?? 0));
 @endphp
 
 <div class="entity-page">
   <section class="row g-2 dashboard-metrics entity-metrics" aria-label="Product metrics">
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <article class="metric-card metric-primary">
         <div class="metric-top">
           <span class="metric-label">Total Products</span>
@@ -31,7 +32,7 @@
         <div class="metric-meta"><span class="text-primary">Catalog</span><span>items listed</span></div>
       </article>
     </div>
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <article class="metric-card metric-danger">
         <div class="metric-top">
           <span class="metric-label">Low Stock</span>
@@ -41,7 +42,7 @@
         <div class="metric-meta"><span class="text-danger">Attention</span><span>10 units or fewer</span></div>
       </article>
     </div>
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <article class="metric-card metric-success">
         <div class="metric-top">
           <span class="metric-label">Inventory Value</span>
@@ -49,6 +50,16 @@
         </div>
         <div class="metric-value">{{ number_format($inventoryValue, 2) }}</div>
         <div class="metric-meta"><span class="text-success">Stock</span><span>estimated value</span></div>
+      </article>
+    </div>
+    <div class="col-12 col-md-3">
+      <article class="metric-card metric-warning">
+        <div class="metric-top">
+          <span class="metric-label">Potential Profit</span>
+          <span class="metric-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span>
+        </div>
+        <div class="metric-value">{{ number_format($potentialProfit, 2) }}</div>
+        <div class="metric-meta"><span class="text-warning">Current stock</span><span>estimated margin</span></div>
       </article>
     </div>
   </section>
@@ -81,7 +92,7 @@
             <th>Product</th>
             <th>SKU</th>
             <th>Stock</th>
-            <th>Unit Price</th>
+            <th>Pricing</th>
             <th>Updated</th>
             <th class="text-right">Actions</th>
           </tr>
@@ -116,7 +127,11 @@
                   <small>{{ $stock }} {{ \Illuminate\Support\Str::plural('unit', $stock) }}</small>
                 </div>
               </td>
-              <td><span class="product-price">{{ number_format($prod->price, 2) }}</span></td>
+              <td>
+                <div class="product-price">Sell: {{ number_format($prod->price, 2) }}</div>
+                <small class="text-muted d-block">Cost: {{ number_format((float) ($prod->cost_price ?? 0), 2) }}</small>
+                <small class="text-success d-block">Profit: {{ number_format((float) $prod->price - (float) ($prod->cost_price ?? 0), 2) }}</small>
+              </td>
               <td>
                 <span class="product-date">
                   {{ $prod->updated_at ? \Illuminate\Support\Carbon::parse($prod->updated_at)->format('d M Y') : '—' }}

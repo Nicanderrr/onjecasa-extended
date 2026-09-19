@@ -41,6 +41,13 @@ class DashboardController extends Controller
                 ->when($branchId, fn ($query) => $query->where('o.branch_id', $branchId))
                 ->whereBetween('p.created_at', [$dateFrom, $dateTo])
                 ->sum('p.amount'),
+            'profit_total' => (float) DB::table('pos_order_items as items')
+                ->join('pos_products as products', 'products.id', '=', 'items.product_id')
+                ->join('pos_orders as orders', 'orders.id', '=', 'items.order_id')
+                ->when($branchId, fn ($query) => $query->where('orders.branch_id', $branchId))
+                ->whereBetween('orders.created_at', [$dateFrom, $dateTo])
+                ->selectRaw('COALESCE(SUM((items.price - COALESCE(items.cost_price, products.cost_price, 0)) * items.qty), 0) as total')
+                ->value('total'),
             'cashier_count' => DB::table('users')
                 ->when($branchId, function ($query) use ($branchId) {
                     $query->join('branch_user', 'branch_user.user_id', '=', 'users.id')

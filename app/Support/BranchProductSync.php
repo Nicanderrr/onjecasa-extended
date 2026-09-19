@@ -168,6 +168,7 @@ class BranchProductSync
             'name' => (string) $product->name,
             'description' => (string) ($product->description ?? ''),
             'price' => $product->price,
+            'cost_price' => $product->cost_price ?? 0,
             'image' => $product->image ?? null,
             'updated_at' => now(),
         ];

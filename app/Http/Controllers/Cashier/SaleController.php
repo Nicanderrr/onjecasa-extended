@@ -83,6 +83,7 @@ class SaleController extends Controller
                     'product_id' => $product->id,
                     'qty' => (int)$item['qty'],
                     'price' => $unitPrice,
+                    'cost_price' => (float) ($product->cost_price ?? 0),
                     'extras' => $encodedExtras,
                     'total' => $lineTotal,
                 ];
@@ -109,6 +110,7 @@ class SaleController extends Controller
                     'product_id' => $lineItem['product_id'],
                     'qty' => $lineItem['qty'],
                     'price' => $lineItem['price'],
+                    'cost_price' => $lineItem['cost_price'],
                     'extras' => $lineItem['extras'],
                     'total' => $lineItem['total'],
                     'created_at' => now(),

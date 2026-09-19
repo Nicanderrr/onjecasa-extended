@@ -81,9 +81,10 @@
         </div>
       </div>
       <div class="row g-3">
-        <div class="col-md-4"><div class="mini-card"><span>Products</span><strong>{{ $stats['product_count'] }}</strong></div></div>
-        <div class="col-md-4"><div class="mini-card"><span>Orders</span><strong>{{ $stats['order_count'] }}</strong></div></div>
-        <div class="col-md-4"><div class="mini-card"><span>Sales</span><strong>{{ number_format($stats['sales_total'], 2) }}</strong></div></div>
+        <div class="col-6 col-md-3"><div class="mini-card"><span>Products</span><strong>{{ $stats['product_count'] }}</strong></div></div>
+        <div class="col-6 col-md-3"><div class="mini-card"><span>Orders</span><strong>{{ $stats['order_count'] }}</strong></div></div>
+        <div class="col-6 col-md-3"><div class="mini-card"><span>Sales</span><strong>{{ number_format($stats['sales_total'], 2) }}</strong></div></div>
+        <div class="col-6 col-md-3"><div class="mini-card"><span>Profit</span><strong>{{ number_format($stats['profit_total'], 2) }}</strong></div></div>
       </div>
     </div>
   </div>

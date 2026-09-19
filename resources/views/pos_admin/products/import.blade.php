@@ -14,7 +14,7 @@
     <div class="card shadow-sm h-100">
       <div class="card-header border-0">
         <h5 class="mb-1"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Excel or CSV</h5>
-        <p class="text-muted mb-0">Use columns: code, name, description, price, stock, image.</p>
+        <p class="text-muted mb-0">Use columns: code, name, description, cost_price, price, stock, image.</p>
       </div>
       <div class="card-body">
         <form method="POST" action="{{ route('pos.admin.products.import.store') }}" enctype="multipart/form-data">
@@ -62,6 +62,7 @@
   <div class="card-body">
     <h6 class="mb-2">Import notes</h6>
     <ul class="mb-0 text-muted">
+      <li>Use <code>cost_price</code> for your unit cost and <code>price</code> for the selling price.</li>
       <li>Prices may be plain numbers such as <code>25.50</code> or include GHC formatting.</li>
       <li>Image values should be existing filenames in <code>public/assets/admin/img/products</code>.</li>
       <li>Imports always apply to the currently selected branch.</li>

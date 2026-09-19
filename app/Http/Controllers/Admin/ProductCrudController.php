@@ -37,8 +37,8 @@ class ProductCrudController extends Controller
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->fromArray([
-            ['code', 'name', 'description', 'price', 'stock', 'image'],
-            ['SKU-001', 'Example Product', 'Product description', 25.00, 10, ''],
+            ['code', 'name', 'description', 'cost_price', 'price', 'stock', 'image'],
+            ['SKU-001', 'Example Product', 'Product description', 15.00, 25.00, 10, ''],
         ]);
 
         $path = storage_path('app/product-import-template.xlsx');
@@ -103,7 +103,8 @@ class ProductCrudController extends Controller
                     'code' => $code,
                     'name' => trim((string) $values['name']),
                     'description' => trim((string) ($values['description'] ?? '')),
-                    'price' => $this->importNumber($values['price'] ?? null, 'price', $number + 2),
+                    'cost_price' => $this->importNumber($values['cost_price'] ?? 0, 'cost price', $number + 2),
+                    'price' => $this->importNumber($values['price'] ?? null, 'selling price', $number + 2),
                     'stock' => $this->importInteger($values['stock'] ?? null, 'stock', $number + 2),
                     'image' => trim((string) ($values['image'] ?? '')) ?: null,
                     'updated_at' => now(),
@@ -203,6 +204,7 @@ class ProductCrudController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'code' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
+            'cost_price' => ['required', 'numeric', 'min:0'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'max:5120'],
@@ -235,6 +237,7 @@ class ProductCrudController extends Controller
             'code' => $code,
             'name' => $data['name'],
             'description' => $data['description'] ?? '',
+            'cost_price' => $data['cost_price'],
             'price' => $data['price'],
             'stock' => $data['stock'],
             'image' => $imageName,
@@ -276,6 +279,7 @@ class ProductCrudController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:100'],
             'description' => ['nullable', 'string'],
+            'cost_price' => ['required', 'numeric', 'min:0'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'max:5120'],
@@ -302,6 +306,7 @@ class ProductCrudController extends Controller
             'code' => $data['code'],
             'name' => $data['name'],
             'description' => $data['description'] ?? '',
+            'cost_price' => $data['cost_price'],
             'price' => $data['price'],
             'stock' => $data['stock'],
             'image' => $imageName,
@@ -324,6 +329,7 @@ class ProductCrudController extends Controller
                     'code' => $data['code'],
                     'name' => $data['name'],
                     'description' => $data['description'] ?? '',
+                    'cost_price' => $data['cost_price'],
                     'price' => $data['price'],
                     'stock' => $data['stock'],
                     'image' => $imageName,
