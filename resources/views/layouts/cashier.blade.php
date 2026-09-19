@@ -105,6 +105,31 @@
     }
     .admin-main { margin-left: 18rem; min-height: 100vh; width: calc(100% - 18rem); }
     .page-heading .page-icon, .page-heading .section-title i { background:#dcfce7; color:#166534; }
+    .page-heading .h3, .page-heading h1 { margin: 0; font-size: 1.35rem; line-height: 1.2; }
+    .page-heading .eyebrow { font-size: .68rem; line-height: 1.2; }
+    .page-heading .text-muted { font-size: .84rem; line-height: 1.45; }
+    .dashboard-content { width: 100%; max-width: 100%; min-width: 0; overflow-x: hidden; padding-bottom: 2rem; }
+    .dashboard-content > .container-fluid { width: 100%; max-width: 100%; min-width: 0; overflow-x: hidden; }
+    .dashboard-content .row, .dashboard-content [class*="col-"], .dashboard-content .card, .dashboard-content .table-responsive { min-width: 0; max-width: 100%; }
+    .dashboard-content .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Keep the cashier workspace visually aligned with the admin workspace. */
+    .admin-sidebar {
+      background: radial-gradient(circle at top, rgba(148, 163, 184, .12), transparent 35%), linear-gradient(180deg, #030405 0%, #0b0d10 52%, #000 100%);
+      border-right-color: rgba(148, 163, 184, .22);
+      box-shadow: 18px 0 42px rgba(0, 0, 0, .28);
+    }
+    .brand-mark { border-color: rgba(148, 163, 184, .2); background: linear-gradient(135deg, rgba(18, 22, 27, .92), rgba(5, 6, 8, .86)); }
+    .brand-icon { border: 3px solid rgba(203, 213, 225, .42); border-radius: 50%; background: transparent; box-shadow: 0 0 0 5px rgba(148, 163, 184, .14), 0 20px 40px -28px rgba(0, 0, 0, .78); }
+    .brand-title, .admin-nav-group-title, .admin-nav-link:hover, .admin-nav-link-active, .sidebar-user strong { color: #f8fafc; }
+    .brand-subtitle, .admin-nav-group-count, .sidebar-user small, .sidebar-footer { color: #9ca3af; }
+    .admin-nav-group { border-color: rgba(148, 163, 184, .16); background: rgba(18, 22, 27, .58); }
+    .admin-nav-group[open] { background: rgba(18, 22, 27, .78); border-color: rgba(148, 163, 184, .24); }
+    .admin-nav-group-symbol { border-color: rgba(148, 163, 184, .18); background: linear-gradient(135deg, rgba(51, 65, 85, .72), rgba(15, 23, 42, .72)); color: #f8fafc; }
+    .admin-nav-link { background: rgba(18, 22, 27, .34); color: #d1d5db; }
+    .admin-nav-link:hover, .admin-nav-link-active { background: linear-gradient(135deg, rgba(51, 65, 85, .72), rgba(15, 23, 42, .72)); border-color: rgba(148, 163, 184, .32); }
+    .page-heading .page-icon, .page-heading .section-title i { background: #e5e7eb; color: #374151; }
+    .sidebar-user { border-color: rgba(148, 163, 184, .16); background: rgba(18, 22, 27, .58); }
     @media (min-width: 1024px) {
       .admin-sidebar { width: 18rem; }
       .admin-sidebar-nav { flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain; }
@@ -121,61 +146,6 @@
       .brand-icon { width:4.9rem; height:4.9rem; }
     }
 
-    .admin-sidebar {
-      background:
-        radial-gradient(circle at top, rgba(244, 182, 63, 0.18), transparent 35%),
-        linear-gradient(180deg, #102a1f 0%, #173d2d 48%, #0b1f17 100%);
-      border-right-color: rgba(244, 182, 63, 0.24);
-      color: #fff7df;
-    }
-
-    .brand-mark {
-      border-color: rgba(244, 182, 63, 0.2);
-      background: rgba(11, 31, 23, 0.44);
-    }
-
-    .brand-title,
-    .admin-nav-group-title,
-    .admin-nav-link:hover,
-    .admin-nav-link-active,
-    .sidebar-user strong {
-      color: #fff7df;
-    }
-
-    .brand-subtitle,
-    .admin-nav-group-count,
-    .sidebar-user small,
-    .sidebar-footer {
-      color: #f4b63f;
-    }
-
-    .admin-nav-group {
-      border-color: rgba(244, 182, 63, 0.18);
-      background: rgba(11, 31, 23, 0.34);
-    }
-
-    .admin-nav-group-symbol {
-      border-color: rgba(244, 182, 63, 0.22);
-      background: linear-gradient(135deg, rgba(47, 155, 85, 0.34), rgba(244, 182, 63, 0.2));
-      color: #fff7df;
-    }
-
-    .admin-nav-link {
-      background: rgba(16, 42, 31, 0.34);
-      color: #dff7e8;
-    }
-
-    .admin-nav-link:hover,
-    .admin-nav-link-active {
-      background: linear-gradient(135deg, rgba(47, 155, 85, 0.36), rgba(216, 50, 42, 0.16));
-      border-color: rgba(244, 182, 63, 0.32);
-    }
-
-    .page-heading .page-icon,
-    .page-heading .section-title i {
-      background: #fff4d8;
-      color: #2f9b55;
-    }
   </style>
   @stack('styles')
 </head>
@@ -418,12 +388,19 @@
         <div class="container-fluid px-3 px-lg-4 py-4">
           <div class="page-heading">
             <div class="page-heading-copy">
-              <span class="page-icon"><i class="bi bi-bag-check-fill" aria-hidden="true"></i></span>
+              <span class="page-icon"><i class="@yield('page-icon', 'bi bi-bag-check-fill')" aria-hidden="true"></i></span>
               <div>
-                <p class="eyebrow mb-1">Workspace</p>
-                <h1 class="h3 mb-1">Cashier</h1>
-                <p class="text-muted mb-0">Process orders, payments, receipts, and product lookups.</p>
+                <p class="eyebrow mb-1">@yield('page-eyebrow', 'Workspace')</p>
+                <h1 class="h3 mb-1">@yield('page-title', 'Cashier')</h1>
+                <p class="text-muted mb-0">@yield('page-description', 'Process orders, payments, receipts, and product lookups.')</p>
               </div>
+            </div>
+            <div class="heading-actions">
+              @hasSection('page-actions')
+                @yield('page-actions')
+              @else
+                <a class="btn btn-primary btn-sm" href="{{ route('cashier.sales.create') }}"><i class="bi bi-cart-plus"></i> New Order</a>
+              @endif
             </div>
           </div>
 

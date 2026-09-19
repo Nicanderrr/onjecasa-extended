@@ -1,5 +1,35 @@
 @extends('layouts.cashier')
 
+@php
+  $pageTitles = [
+    'dashboard' => ['Overview', 'Dashboard', 'A focused view of this cashier station.'],
+    'products' => ['Catalog', 'Products', 'Browse products and current branch stock.'],
+    'orders' => ['Transactions', 'Orders', 'Review recent orders processed by this branch.'],
+    'payments' => ['Transactions', 'Payments', 'Review collected payments and payment methods.'],
+    'receipts' => ['Transactions', 'Receipts', 'Open recent orders and print customer receipts.'],
+    'orders-reports' => ['Reports', 'Order Reports', 'Review order activity from the cashier workspace.'],
+    'payments-reports' => ['Reports', 'Payment Reports', 'Review payment activity from the cashier workspace.'],
+    'sales' => ['Reports', 'Sales', 'Review paid sales from the cashier workspace.'],
+    'settings' => ['System', 'Settings', 'Update your cashier profile and notifications.'],
+  ];
+  [$pageEyebrow, $pageTitle, $pageDescription] = $pageTitles[$page] ?? ['Workspace', 'Cashier', 'Cashier workspace.'];
+@endphp
+
+@section('title', $pageTitle . ' - Cashier')
+@section('page-eyebrow', $pageEyebrow)
+@section('page-title', $pageTitle)
+@section('page-description', $pageDescription)
+@section('page-icon', $page === 'products' ? 'bi bi-box-seam' : ($page === 'settings' ? 'bi bi-sliders' : ($page === 'dashboard' ? 'bi bi-speedometer2' : 'bi bi-receipt-cutoff')))
+@section('page-actions')
+  @if($page === 'dashboard')
+    <a class="btn btn-primary btn-sm" href="{{ route('cashier.sales.create') }}"><i class="bi bi-cart-plus"></i> Make Order</a>
+  @elseif($page === 'orders' || $page === 'receipts')
+    <a class="btn btn-primary btn-sm" href="{{ route('cashier.sales.create') }}"><i class="bi bi-cart-plus"></i> New Order</a>
+  @elseif($page === 'products')
+    <a class="btn btn-outline-secondary btn-sm" href="{{ route('cashier.sales.create') }}"><i class="bi bi-cart-plus"></i> Make Order</a>
+  @endif
+@endsection
+
 @section('content')
 @if($page === 'dashboard')
 <section class="row g-3 mt-1" aria-label="Cashier quick actions">
@@ -139,24 +169,57 @@
 @else
 <section class="row g-3 mt-1">
   <div class="col-12">
-    <div class="panel">
-      <div class="panel-header">
+    @php
+      $isProductPage = $page === 'products';
+      $isPaymentPage = in_array($page, ['payments', 'payments-reports'], true);
+      $isReceiptPage = $page === 'receipts';
+      $rows = $isProductPage ? $products : ($isPaymentPage ? $payments : $orders);
+    @endphp
+    <div class="card shadow entity-card">
+      <div class="card-header border-0 entity-toolbar">
         <div>
-          <h2 class="h5 mb-1 section-title"><i class="bi bi-table" aria-hidden="true"></i><span class="text-capitalize">{{ str_replace('-', ' ', $page) }}</span></h2>
-          <p class="text-muted mb-0">View the current cashier section data below.</p>
+          <div class="d-flex align-items-center gap-2">
+            <span class="page-icon"><i class="bi {{ $isProductPage ? 'bi-box-seam' : ($isPaymentPage ? 'bi-wallet2' : ($isReceiptPage ? 'bi-receipt-cutoff' : 'bi-cart-check')) }}"></i></span>
+            <div>
+              <strong>{{ $pageTitle }}</strong>
+              <span>{{ $rows->count() }} recent {{ \Illuminate\Support\Str::lower($pageTitle) }} shown</span>
+            </div>
+          </div>
+        </div>
+        <div class="entity-filter-wrap">
+          <i class="bi bi-search"></i>
+          <input type="search" class="form-control form-control-sm entity-filter" placeholder="Search {{ \Illuminate\Support\Str::lower($pageTitle) }}" aria-label="Filter {{ $pageTitle }}" data-table-filter="#cashier-data-table">
         </div>
       </div>
       <div class="table-responsive">
-        <table class="table align-middle mb-0">
-          @if($page === 'products')
-            <thead><tr><th>Code</th><th>Name</th><th>Price</th><th>Stock</th></tr></thead>
-            <tbody>@foreach($products as $p)<tr><td>{{ $p->code }}</td><td>{{ $p->name }}</td><td>{{ number_format($p->price, 2) }}</td><td>{{ $p->stock }}</td></tr>@endforeach</tbody>
-          @elseif(in_array($page, ['payments', 'payments-reports', 'receipts']))
-            <thead><tr><th>#</th><th>Order</th><th>Method</th><th>Amount</th><th>Date</th></tr></thead>
-            <tbody>@foreach($payments as $pay)<tr><td>{{ $pay->id }}</td><td>#{{ $pay->order_id }}</td><td>{{ $pay->method }}</td><td>{{ number_format($pay->amount, 2) }}</td><td>{{ $pay->created_at }}</td></tr>@endforeach</tbody>
+        <table class="table align-items-center table-flush" id="cashier-data-table">
+          @if($isProductPage)
+            <thead><tr><th>Product</th><th>Code</th><th>Price</th><th>Stock</th></tr></thead>
+            <tbody>
+              @forelse($products as $product)
+                <tr data-filter-row><td><strong>{{ $product->name }}</strong><small class="d-block text-muted">{{ $product->description ?: 'No description' }}</small></td><td><span class="text-muted">{{ $product->code }}</span></td><td><strong>{{ number_format($product->price, 2) }}</strong></td><td><span class="badge {{ $product->stock > 0 ? 'text-bg-success' : 'text-bg-secondary' }}">{{ $product->stock }} in stock</span></td></tr>
+              @empty
+                <tr><td colspan="4" class="text-center py-5 text-muted">No products available.</td></tr>
+              @endforelse
+            </tbody>
+          @elseif($isPaymentPage)
+            <thead><tr><th>Payment</th><th>Order</th><th>Method</th><th>Amount</th><th>Date</th></tr></thead>
+            <tbody>
+              @forelse($payments as $payment)
+                <tr data-filter-row><td><strong>#{{ $payment->id }}</strong></td><td>#{{ $payment->order_id }}</td><td><span class="badge text-bg-light">{{ $payment->method }}</span></td><td><strong>{{ number_format($payment->amount, 2) }}</strong></td><td>{{ \Illuminate\Support\Carbon::parse($payment->created_at)->format('d M Y, h:i A') }}</td></tr>
+              @empty
+                <tr><td colspan="5" class="text-center py-5 text-muted">No payments recorded yet.</td></tr>
+              @endforelse
+            </tbody>
           @else
-            <thead><tr><th>Code</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
-            <tbody>@foreach($orders as $order)<tr><td>{{ $order->code }}</td><td>{{ $order->customer_name }}</td><td>{{ number_format($order->grand_total, 2) }}</td><td><span class="badge text-bg-success">{{ $order->status }}</span></td><td>{{ $order->created_at }}</td></tr>@endforeach</tbody>
+            <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th><th></th></tr></thead>
+            <tbody>
+              @forelse($orders as $order)
+                <tr data-filter-row><td><a href="{{ route('cashier.receipts.show', $order->id) }}"><strong>{{ $order->code }}</strong></a></td><td>{{ $order->customer_name ?: 'Walk-in' }}</td><td><strong>{{ number_format($order->grand_total, 2) }}</strong></td><td><span class="badge text-bg-success">{{ ucfirst($order->status) }}</span></td><td>{{ \Illuminate\Support\Carbon::parse($order->created_at)->format('d M Y, h:i A') }}</td><td class="text-end"><a class="btn btn-outline-secondary btn-sm" href="{{ route('cashier.receipts.show', $order->id) }}" title="View receipt" aria-label="View receipt"><i class="bi bi-eye"></i></a></td></tr>
+              @empty
+                <tr><td colspan="6" class="text-center py-5 text-muted">No orders recorded yet.</td></tr>
+              @endforelse
+            </tbody>
           @endif
         </table>
       </div>
