@@ -96,14 +96,18 @@ class ProductCrudController extends Controller
                     continue;
                 }
 
-                $code = trim((string) ($values['code'] ?? '')) ?: $this->makeUniqueCode((string) $values['name'], $branchId);
+                $code = trim((string) ($values['code'] ?? ''));
+                if ($code === '' || preg_match('/^\d+(?:\.\d+)?E\+\d+$/i', $code)) {
+                    $code = $this->makeUniqueCode((string) $values['name'], $branchId);
+                }
                 $existing = DB::table('pos_products')->where('branch_id', $branchId)->where('code', $code)->first();
+                $costValue = $values['cost_price'] ?? null;
                 $payload = [
                     'branch_id' => $branchId,
                     'code' => $code,
                     'name' => trim((string) $values['name']),
                     'description' => trim((string) ($values['description'] ?? '')),
-                    'cost_price' => $this->importNumber($values['cost_price'] ?? 0, 'cost price', $number + 2),
+                    'cost_price' => blank($costValue) ? 0 : $this->importNumber($costValue, 'cost price', $number + 2),
                     'price' => $this->importNumber($values['price'] ?? null, 'selling price', $number + 2),
                     'stock' => $this->importInteger($values['stock'] ?? null, 'stock', $number + 2),
                     'image' => trim((string) ($values['image'] ?? '')) ?: null,
@@ -165,6 +169,17 @@ class ProductCrudController extends Controller
         $headers = [];
         foreach ($row as $column => $value) {
             $key = Str::of((string) $value)->lower()->replace([' ', '-'], '_')->toString();
+            $key = [
+                'total_stock' => 'stock',
+                'quantity' => 'stock',
+                'qty' => 'stock',
+                'selling_price' => 'price',
+                'unit_price' => 'price',
+                'cost' => 'cost_price',
+                'unit_cost' => 'cost_price',
+                'sku' => 'code',
+                'barcode' => 'code',
+            ][$key] ?? $key;
             if ($key !== '') {
                 $headers[$key] = $column;
             }
@@ -192,7 +207,7 @@ class ProductCrudController extends Controller
 
     private function importInteger(mixed $value, string $field, int $line): int
     {
-        if (filter_var($value, FILTER_VALIDATE_INT) === false || (int) $value < 0) {
+        if ($value === '' || ! is_numeric($value) || (float) $value < 0 || floor((float) $value) !== (float) $value) {
             throw new \RuntimeException("Invalid {$field} on row {$line}.");
         }
         return (int) $value;
