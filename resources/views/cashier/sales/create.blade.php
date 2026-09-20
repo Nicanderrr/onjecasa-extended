@@ -582,6 +582,12 @@
         </div>
 
         <div class="form-group mb-3">
+          <label class="mb-2 fw-bold">Customer Phone <span class="text-muted fw-normal">(optional)</span></label>
+          <input class="form-control" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="024 123 4567 or +233241234567" inputmode="tel">
+          <div class="form-hint">A private receipt link will be sent by SMS when Zeckta is configured.</div>
+        </div>
+
+        <div class="form-group mb-3">
           <label class="mb-2 fw-bold">Payment Method</label>
           <select class="form-control" name="payment_method" required>
             <option @selected(old('payment_method') === 'Cash')>Cash</option>

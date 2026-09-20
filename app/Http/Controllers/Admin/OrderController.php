@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\BranchContext;
 use App\Support\AuditTrail;
 use App\Support\MealExtras;
+use App\Services\ZecktaSmsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,7 @@ class OrderController extends Controller
     {
         $base = $request->validate([
             'customer_name' => ['nullable', 'string', 'max:255'],
+            'customer_phone' => ['nullable', 'string', 'max:30'],
             'payment_method' => ['required', 'in:Cash,Mobile Money'],
             'paystack_reference' => ['nullable', 'string', 'max:255'],
             'items' => ['required', 'array'],
@@ -48,8 +50,10 @@ class OrderController extends Controller
         $productIds = collect($items)->pluck('product_id')->unique()->values();
 
         $orderId = null;
+        $receiptToken = Str::random(64);
+        $customerPhone = $this->normalizeCustomerPhone($base['customer_phone'] ?? null);
 
-        DB::transaction(function () use ($base, $items, $productIds, &$orderId) {
+        DB::transaction(function () use ($base, $items, $productIds, $customerPhone, $receiptToken, &$orderId) {
             $branchId = BranchContext::activeId();
             if (! $branchId) {
                 throw ValidationException::withMessages(['items' => 'Select a branch before creating a POS order.']);
@@ -123,6 +127,8 @@ class OrderController extends Controller
                 'source_uuid' => (string) Str::uuid(),
                 'source_system' => (string) config('offline_pos.source_id'),
                 'customer_name' => $base['customer_name'] ?? 'Walk-in',
+                'customer_phone' => $customerPhone,
+                'receipt_token' => $receiptToken,
                 'cashier_user_id' => auth()->id(),
                 'grand_total' => $grandTotal,
                 'status' => 'paid',
@@ -161,6 +167,13 @@ class OrderController extends Controller
             ]);
         });
 
+        $smsSent = false;
+        if ($customerPhone) {
+            $order = DB::table('pos_orders')->where('id', $orderId)->first(['code', 'grand_total']);
+            $smsSent = app(ZecktaSmsService::class)->sendReceipt($customerPhone, route('customer.receipts.show', $receiptToken), (string) $order->code, number_format((float) $order->grand_total, 2, '.', ''));
+            if ($smsSent) DB::table('pos_orders')->where('id', $orderId)->update(['receipt_sms_sent_at' => now()]);
+        }
+
         AuditTrail::record('order_created', 'Created paid order #' . $orderId, [
             'auditable_type' => 'order',
             'auditable_id' => $orderId,
@@ -172,7 +185,16 @@ class OrderController extends Controller
         ]);
 
         return redirect()->route('pos.admin.receipts.show', ['id' => $orderId, 'autoprint' => 1])
-            ->with('success', 'Payment successful. Receipt generated.');
+            ->with('success', $smsSent ? 'Payment successful. Receipt generated and sent by SMS.' : 'Payment successful. Receipt generated.');
+    }
+
+    private function normalizeCustomerPhone(?string $phone): ?string
+    {
+        $phone = preg_replace('/\s+/', '', trim((string) $phone));
+        if ($phone === '') return null;
+        if (str_starts_with($phone, '0')) $phone = '+233' . substr($phone, 1);
+        if (! preg_match('/^\+\d{10,15}$/', $phone)) throw ValidationException::withMessages(['customer_phone' => 'Enter a valid phone number, for example +233241234567.']);
+        return $phone;
     }
 
     public function index(): View

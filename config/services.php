@@ -39,6 +39,20 @@ return [
         'from' => env('TWILIO_PHONE'),
     ],
 
+    'zeckta' => [
+        'api_key' => env('ZECKTA_API_KEY'),
+        'api_secret' => env('ZECKTA_API_SECRET'),
+        'sms_url' => env('ZECKTA_SMS_URL', 'https://api.zeckta.com/v1/messages/send'),
+        'timeout' => env('ZECKTA_TIMEOUT', 10),
+    ],
+
+    'zeckta' => [
+        'api_key' => env('ZECKTA_API_KEY'),
+        'api_secret' => env('ZECKTA_API_SECRET'),
+        'sms_url' => env('ZECKTA_SMS_URL', 'https://api.zeckta.com/v1/messages/send'),
+        'timeout' => env('ZECKTA_TIMEOUT', 10),
+    ],
+
     'openai' => [
         'api_key' => env('OPENAI_API_KEY'),
     ],

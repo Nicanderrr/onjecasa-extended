@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\SystemUserController as PosSystemUserController;
 use App\Http\Controllers\Cashier\PageController as CashierPageController;
 use App\Http\Controllers\Cashier\ReceiptController as CashierReceiptController;
 use App\Http\Controllers\Cashier\SaleController as CashierSaleController;
+use App\Http\Controllers\CustomerReceiptController;
 use App\Http\Controllers\SuperAdminController;
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -37,6 +38,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/', function () {
     return view('Frontend.index');
 });
+
+Route::get('/r/{token}', [CustomerReceiptController::class, 'show'])->name('customer.receipts.show');
 
 Route::get('/index', function () {
     return view('Frontend.index');

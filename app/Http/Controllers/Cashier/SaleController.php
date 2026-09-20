@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\BranchContext;
 use App\Support\AuditTrail;
 use App\Support\MealExtras;
+use App\Services\ZecktaSmsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,7 @@ class SaleController extends Controller
     {
         $base = $request->validate([
             'customer_name' => ['required', 'string', 'max:255'],
+            'customer_phone' => ['nullable', 'string', 'max:30'],
             'payment_method' => ['required', 'string', 'max:50'],
             'items' => ['required', 'array'],
             'items.*.product_id' => ['nullable', 'integer'],
@@ -47,8 +49,10 @@ class SaleController extends Controller
         $productIds = collect($items)->pluck('product_id')->unique()->values();
 
         $orderId = null;
+        $receiptToken = Str::random(64);
+        $customerPhone = $this->normalizeCustomerPhone($base['customer_phone'] ?? null);
 
-        DB::transaction(function () use ($base, $items, $productIds, &$orderId) {
+        DB::transaction(function () use ($base, $items, $productIds, $customerPhone, $receiptToken, &$orderId) {
             $branchId = BranchContext::activeId();
             $products = DB::table('pos_products')
                 ->where('branch_id', $branchId)
@@ -95,6 +99,8 @@ class SaleController extends Controller
                 'source_uuid' => (string) Str::uuid(),
                 'source_system' => (string) config('offline_pos.source_id'),
                 'customer_name' => $base['customer_name'],
+                'customer_phone' => $customerPhone,
+                'receipt_token' => $receiptToken,
                 'cashier_user_id' => auth()->id(),
                 'grand_total' => $grandTotal,
                 'status' => 'paid',
@@ -132,6 +138,19 @@ class SaleController extends Controller
             ]);
         });
 
+        $smsSent = false;
+        if ($customerPhone) {
+            $smsSent = app(ZecktaSmsService::class)->sendReceipt(
+                $customerPhone,
+                route('customer.receipts.show', $receiptToken),
+                (string) DB::table('pos_orders')->where('id', $orderId)->value('code'),
+                number_format((float) DB::table('pos_orders')->where('id', $orderId)->value('grand_total'), 2, '.', '')
+            );
+            if ($smsSent) {
+                DB::table('pos_orders')->where('id', $orderId)->update(['receipt_sms_sent_at' => now()]);
+            }
+        }
+
         AuditTrail::record('sale_created', 'Created paid cashier sale #' . $orderId, [
             'auditable_type' => 'order',
             'auditable_id' => $orderId,
@@ -143,6 +162,17 @@ class SaleController extends Controller
         ]);
 
         return redirect()->route('cashier.receipts.show', ['id' => $orderId, 'autoprint' => 1])
-            ->with('success', 'Payment successful. Receipt generated.');
+            ->with('success', $smsSent ? 'Payment successful. Receipt generated and sent by SMS.' : 'Payment successful. Receipt generated.');
+    }
+
+    private function normalizeCustomerPhone(?string $phone): ?string
+    {
+        $phone = preg_replace('/\s+/', '', trim((string) $phone));
+        if ($phone === '') return null;
+        if (str_starts_with($phone, '0')) $phone = '+233' . substr($phone, 1);
+        if (! preg_match('/^\+\d{10,15}$/', $phone)) {
+            throw ValidationException::withMessages(['customer_phone' => 'Enter a valid phone number, for example +233241234567.']);
+        }
+        return $phone;
     }
 }

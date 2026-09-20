@@ -589,6 +589,12 @@
         <input type="hidden" name="customer_name" value="Walk-in">
 
         <div class="form-group mb-3">
+          <label class="mb-2">Customer Phone <span class="text-muted">(optional)</span></label>
+          <input class="form-control" name="customer_phone" value="{{ old('customer_phone') }}" placeholder="024 123 4567 or +233241234567" inputmode="tel">
+          <div class="form-hint">A private receipt link will be sent by SMS when Zeckta is configured.</div>
+        </div>
+
+        <div class="form-group mb-3">
           <label class="mb-2">Payment Method</label>
           <select class="form-control" name="payment_method" id="payment_method" required>
             <option>Cash</option>
