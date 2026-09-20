@@ -56,8 +56,8 @@ class ProductCrudController extends Controller
         ]);
 
         $extension = strtolower($request->file('file')->getClientOriginalExtension());
-        if (! in_array($extension, ['csv', 'txt', 'xls', 'xlsx', 'sql'], true)) {
-            return back()->with('error', 'Upload a CSV, Excel, or MySQL SQL file.')->withInput();
+        if (! in_array($extension, ['csv', 'txt', 'xls', 'xlsx', 'pdf', 'sql'], true)) {
+            return back()->with('error', 'Upload a CSV, Excel, PDF, or MySQL SQL file.')->withInput();
         }
 
         $branchId = BranchContext::activeId();
@@ -68,7 +68,9 @@ class ProductCrudController extends Controller
         try {
             $result = $data['import_type'] === 'sql'
                 ? $this->importSql($request->file('file'), $branchId)
-                : $this->importSpreadsheet($request->file('file'), $branchId, $request->boolean('sync_to_website'));
+                : (strtolower($request->file('file')->getClientOriginalExtension()) === 'pdf'
+                    ? $this->importPdf($request->file('file'), $branchId, $request->boolean('sync_to_website'))
+                    : $this->importSpreadsheet($request->file('file'), $branchId, $request->boolean('sync_to_website')));
         } catch (\Throwable $exception) {
             report($exception);
             return back()->with('error', 'Import failed: ' . $exception->getMessage());
@@ -82,9 +84,52 @@ class ProductCrudController extends Controller
         $spreadsheet = IOFactory::load($file->getRealPath());
         $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
         $headers = $this->importHeaders(array_shift($rows) ?: []);
+        return $this->importRows($rows, $headers, $branchId, $syncToWebsite);
+    }
+
+    private function importPdf($file, int $branchId, bool $syncToWebsite): string
+    {
+        $text = (new \Smalot\PdfParser\Parser())->parseFile($file->getRealPath())->getText();
+        $lines = preg_split('/\R/', $text) ?: [];
+        $headerIndex = null;
+        $headers = [];
+
+        foreach ($lines as $index => $line) {
+            $candidate = preg_split('/\s{2,}|\t+/', trim($line), -1, PREG_SPLIT_NO_EMPTY);
+            $normalized = implode(' ', array_map(fn ($value) => Str::lower(trim($value)), $candidate));
+            if (str_contains($normalized, 'name') && (str_contains($normalized, 'price') || str_contains($normalized, 'selling')) && (str_contains($normalized, 'stock') || str_contains($normalized, 'quantity'))) {
+                $headers = $this->importHeaders($candidate);
+                $headerIndex = $index;
+                break;
+            }
+        }
+
+        if ($headerIndex === null || array_diff(['name', 'price', 'stock'], array_keys($headers))) {
+            throw new \RuntimeException('PDF must contain a text table with name, price, and stock columns. Scanned image PDFs are not supported.');
+        }
+
+        $rows = [];
+        foreach (array_slice($lines, $headerIndex + 1) as $line) {
+            $line = trim($line);
+            if ($line === '' || preg_match('/^(page\s+)?\d+$/i', $line)) {
+                continue;
+            }
+
+            $parts = preg_split('/\s{2,}|\t+/', $line, -1, PREG_SPLIT_NO_EMPTY);
+            if (count($parts) < count($headers)) {
+                continue;
+            }
+            $rows[] = $parts;
+        }
+
+        return $this->importRows($rows, $headers, $branchId, $syncToWebsite);
+    }
+
+    private function importRows(array $rows, array $headers, int $branchId, bool $syncToWebsite): string
+    {
         $required = ['name', 'price', 'stock'];
         if (array_diff($required, array_keys($headers))) {
-            throw new \RuntimeException('Spreadsheet must include name, price, and stock columns.');
+            throw new \RuntimeException('Import file must include name, price, and stock columns.');
         }
 
         $codeCounts = collect($rows)
@@ -192,6 +237,7 @@ class ProductCrudController extends Controller
                 'qty' => 'stock',
                 'selling_price' => 'price',
                 'unit_price' => 'price',
+                'product_name' => 'name',
                 'cost' => 'cost_price',
                 'unit_cost' => 'cost_price',
                 'sku' => 'code',

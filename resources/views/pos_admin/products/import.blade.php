@@ -14,7 +14,7 @@
     <div class="card shadow-sm h-100">
       <div class="card-header border-0">
         <h5 class="mb-1"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Excel or CSV</h5>
-        <p class="text-muted mb-0">Use columns: code, name, description, cost_price, price, stock (or Total Stock), image.</p>
+        <p class="text-muted mb-0">Use CSV, Excel, or a text-based PDF table with columns: code, name, description, cost_price, price, stock.</p>
       </div>
       <div class="card-body">
         <form method="POST" action="{{ route('pos.admin.products.import.store') }}" enctype="multipart/form-data">
@@ -22,14 +22,14 @@
           <input type="hidden" name="import_type" value="spreadsheet">
           <div class="mb-3">
             <label class="form-label" for="spreadsheet_file">Product file</label>
-            <input id="spreadsheet_file" class="form-control" type="file" name="file" accept=".csv,.txt,.xls,.xlsx" required>
+            <input id="spreadsheet_file" class="form-control" type="file" name="file" accept=".csv,.txt,.xls,.xlsx,.pdf" required>
             <div class="form-text">Existing products are updated when the SKU/code matches in the selected branch. Blank code values receive a generated SKU.</div>
           </div>
           <label class="form-check mb-3">
             <input class="form-check-input" type="checkbox" name="sync_to_website" value="1">
             <span class="form-check-label">Also sync imported products to the website catalog</span>
           </label>
-          <button class="btn btn-primary" type="submit"><i class="bi bi-upload me-1"></i> Import Spreadsheet</button>
+          <button class="btn btn-primary" type="submit"><i class="bi bi-upload me-1"></i> Import File</button>
           <a class="btn btn-outline-secondary ms-2" href="{{ route('pos.admin.products.import.template') }}"><i class="bi bi-download me-1"></i> Download Template</a>
         </form>
       </div>
