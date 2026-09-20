@@ -22,12 +22,13 @@ class ZecktaSmsService
                 $request = $request->withHeaders(['X-API-Secret' => $secret]);
             }
             $response = $request->post($url, [
-                'channel' => 'sms',
-                'to' => $phone,
-                'type' => 'text',
+                'src' => (string) config('services.zeckta.sender_id', 'ONJECASA'),
+                'dest' => $phone,
                 'message' => sprintf('Thank you for shopping at ONJECASA. Receipt %s for GHS %s: %s', $orderCode, $amount, $receiptUrl),
+                'priority' => 'normal',
+                'type' => 'plain',
             ]);
-            if ($response->successful()) {
+            if ($response->successful() && $response->json('success') !== false) {
                 return true;
             }
             Log::warning('Zeckta receipt SMS failed.', ['order' => $orderCode, 'status' => $response->status(), 'response' => $response->json() ?: $response->body()]);
