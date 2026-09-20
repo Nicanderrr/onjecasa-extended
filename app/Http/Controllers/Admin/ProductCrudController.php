@@ -87,9 +87,13 @@ class ProductCrudController extends Controller
             throw new \RuntimeException('Spreadsheet must include name, price, and stock columns.');
         }
 
+        $codeCounts = collect($rows)
+            ->map(fn (array $row) => trim((string) ($row[$headers['code']] ?? '')))
+            ->filter()
+            ->countBy();
         $created = 0;
         $updated = 0;
-        DB::transaction(function () use ($rows, $headers, $branchId, $syncToWebsite, &$created, &$updated) {
+        DB::transaction(function () use ($rows, $headers, $codeCounts, $branchId, $syncToWebsite, &$created, &$updated) {
             foreach ($rows as $number => $row) {
                 $values = $this->importRow($row, $headers);
                 if (trim((string) ($values['name'] ?? '')) === '') {
@@ -97,7 +101,9 @@ class ProductCrudController extends Controller
                 }
 
                 $code = trim((string) ($values['code'] ?? ''));
-                if ($code === '' || preg_match('/^\d+(?:\.\d+)?E\+\d+$/i', $code)) {
+                $roundedBarcode = preg_match('/^\d{12,}0{5,}$/', $code) === 1;
+                $repeatedCode = $code !== '' && ($codeCounts[$code] ?? 0) > 1;
+                if ($code === '' || $roundedBarcode || $repeatedCode || preg_match('/^\d+(?:\.\d+)?E\+\d+$/i', $code)) {
                     $code = $this->makeUniqueCode((string) $values['name'], $branchId);
                 }
                 $existing = DB::table('pos_products')->where('branch_id', $branchId)->where('code', $code)->first();
