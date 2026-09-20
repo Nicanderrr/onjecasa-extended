@@ -107,7 +107,9 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        foreach ([
+        // Products are intentionally excluded from the base seeder. Import the live inventory separately.
+        if (false) {
+            foreach ([
             [
                 'Premium Rice 5kg',
                 'Groceries',
@@ -229,6 +231,8 @@ class DatabaseSeeder extends Seeder
 
                 $websiteProduct->forceFill(['pos_product_id' => $posProductId])->save();
             }
+        }
+
         }
 
         if (DB::getSchemaBuilder()->hasTable('pos_settings')) {
