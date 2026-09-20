@@ -4,14 +4,33 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+$possibleRoots = [
+    dirname(__DIR__) . '/ONJECASA',
+    dirname(__DIR__) . '/onjecasa',
+    dirname(__DIR__),
+];
+
+$laravelRoot = null;
+foreach ($possibleRoots as $root) {
+    if (file_exists($root . '/vendor/autoload.php') && file_exists($root . '/bootstrap/app.php')) {
+        $laravelRoot = $root;
+        break;
+    }
+}
+
+if (! $laravelRoot) {
+    http_response_code(500);
+    exit('Laravel application path not found.');
+}
+
 // Determine if the application is in maintenance mode...
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+if (file_exists($maintenance = $laravelRoot . '/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
 // Register the Composer autoloader...
-require __DIR__.'/../vendor/autoload.php';
+require $laravelRoot . '/vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
-(require_once __DIR__.'/../bootstrap/app.php')
+(require_once $laravelRoot . '/bootstrap/app.php')
     ->handleRequest(Request::capture());
