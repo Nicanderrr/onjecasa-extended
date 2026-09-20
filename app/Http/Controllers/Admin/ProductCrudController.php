@@ -93,7 +93,8 @@ class ProductCrudController extends Controller
             ->countBy();
         $created = 0;
         $updated = 0;
-        DB::transaction(function () use ($rows, $headers, $codeCounts, $branchId, $syncToWebsite, &$created, &$updated) {
+        $skipped = 0;
+        DB::transaction(function () use ($rows, $headers, $codeCounts, $branchId, $syncToWebsite, &$created, &$updated, &$skipped) {
             foreach ($rows as $number => $row) {
                 $values = $this->importRow($row, $headers);
                 if (trim((string) ($values['name'] ?? '')) === '') {
@@ -103,7 +104,12 @@ class ProductCrudController extends Controller
                 $code = trim((string) ($values['code'] ?? ''));
                 $roundedBarcode = preg_match('/^\d{12,}0{5,}$/', $code) === 1;
                 $repeatedCode = $code !== '' && ($codeCounts[$code] ?? 0) > 1;
-                if ($code === '' || $roundedBarcode || $repeatedCode || preg_match('/^\d+(?:\.\d+)?E\+\d+$/i', $code)) {
+                $scientificBarcode = preg_match('/^\d+(?:\.\d+)?E\+\d+$/i', $code) === 1;
+                if ($roundedBarcode || $repeatedCode || $scientificBarcode) {
+                    $skipped++;
+                    continue;
+                }
+                if ($code === '') {
                     $code = $this->makeUniqueCode((string) $values['name'], $branchId);
                 }
                 $existing = DB::table('pos_products')->where('branch_id', $branchId)->where('code', $code)->first();
@@ -139,7 +145,12 @@ class ProductCrudController extends Controller
             }
         });
 
-        return "Product import complete: {$created} created, {$updated} updated.";
+        $message = "Product import complete: {$created} created, {$updated} updated.";
+        if ($skipped > 0) {
+            $message .= " {$skipped} skipped because their barcode was duplicated or converted by Excel; correct those barcodes in the source file before importing them.";
+        }
+
+        return $message;
     }
 
     private function importSql($file, int $branchId): string
