@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -39,26 +38,16 @@ return new class extends Migration
 
     private function dropIndexIfExists(string $table, string $index): void
     {
-        $database = DB::getDatabaseName();
-        $exists = DB::table('information_schema.statistics')
-            ->where('table_schema', $database)
-            ->where('table_name', $table)
-            ->where('index_name', $index)
-            ->exists();
+        $exists = collect(Schema::getIndexes($table))->contains('name', $index);
 
         if ($exists) {
-            DB::statement("ALTER TABLE `{$table}` DROP INDEX `{$index}`");
+            Schema::table($table, fn (Blueprint $table) => $table->dropIndex($index));
         }
     }
 
     private function addIndexIfMissing(string $table, string $index, string $type, array $columns): void
     {
-        $database = DB::getDatabaseName();
-        $exists = DB::table('information_schema.statistics')
-            ->where('table_schema', $database)
-            ->where('table_name', $table)
-            ->where('index_name', $index)
-            ->exists();
+        $exists = collect(Schema::getIndexes($table))->contains('name', $index);
 
         if ($exists) {
             return;
