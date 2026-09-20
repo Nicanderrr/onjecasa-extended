@@ -14,12 +14,6 @@
 @endsection
 
 @section('content')
-@php
-  $lowStock = $products->filter(fn ($prod) => (int) ($prod->stock ?? 0) <= 10)->count();
-  $inventoryValue = $products->sum(fn ($prod) => (float) ($prod->price ?? 0) * (int) ($prod->stock ?? 0));
-  $potentialProfit = $products->sum(fn ($prod) => ((float) ($prod->price ?? 0) - (float) ($prod->cost_price ?? 0)) * (int) ($prod->stock ?? 0));
-@endphp
-
 <div class="entity-page">
   <section class="row g-2 dashboard-metrics entity-metrics" aria-label="Product metrics">
     <div class="col-12 col-md-3">
@@ -28,7 +22,7 @@
           <span class="metric-label">Total Products</span>
           <span class="metric-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
         </div>
-        <div class="metric-value">{{ $products->count() }}</div>
+        <div class="metric-value">{{ number_format($totalProducts) }}</div>
         <div class="metric-meta"><span class="text-primary">Catalog</span><span>items listed</span></div>
       </article>
     </div>
@@ -70,18 +64,21 @@
         <span class="products-table-icon"><i class="bi bi-boxes"></i></span>
         <div>
           <strong>Product inventory</strong>
-          <span>{{ $products->count() }} {{ \Illuminate\Support\Str::plural('item', $products->count()) }} in the catalog</span>
+          <span>{{ number_format($totalProducts) }} {{ \Illuminate\Support\Str::plural('item', $totalProducts) }} in the catalog</span>
         </div>
       </div>
       <div class="entity-filter-wrap">
         <i class="bi bi-search" aria-hidden="true"></i>
-        <input
-          type="search"
-          class="form-control form-control-sm entity-filter"
-          placeholder="Search products or SKU"
-          aria-label="Filter products"
-          data-table-filter="#products-table"
-        >
+        <form method="GET" action="{{ route('pos.admin.products.index') }}">
+          <input
+            type="search"
+            name="q"
+            value="{{ request('q') }}"
+            class="form-control form-control-sm entity-filter"
+            placeholder="Search products or SKU"
+            aria-label="Search products"
+          >
+        </form>
       </div>
     </div>
 
@@ -165,6 +162,12 @@
         </tbody>
       </table>
     </div>
+    @if($products->hasPages())
+      <div class="card-footer border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <small class="text-muted">Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of {{ $products->total() }} products</small>
+        {{ $products->links() }}
+      </div>
+    @endif
   </div>
 </div>
 @endsection

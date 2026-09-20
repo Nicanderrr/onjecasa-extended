@@ -19,9 +19,26 @@ use App\Models\cart;
 class ProductController extends Controller
 {
 
-    public function DisplayProduct(){
-        $products['alldata'] = ProductPage::latest()->take(100000)->get();
-        return view('backend.view_product', $products);
+    public function DisplayProduct(Request $request){
+        $catalogQuery = ProductPage::query();
+        $productsQuery = clone $catalogQuery;
+        $search = trim((string) $request->input('q', ''));
+
+        if ($search !== '') {
+            $productsQuery->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhere('contents', 'like', '%' . $search . '%');
+            });
+        }
+
+        $alldata = $productsQuery->latest()->paginate(25)->withQueryString();
+        $totalProducts = (clone $catalogQuery)->count();
+        $syncedProducts = (clone $catalogQuery)->whereNotNull('pos_product_id')->where('pos_product_id', '>', 0)->count();
+        $totalInventoryValue = (float) ((clone $catalogQuery)->selectRaw('COALESCE(SUM(price * stock), 0) as total')->value('total') ?? 0);
+        $categories = (clone $catalogQuery)->whereNotNull('description')->where('description', '!=', '')->distinct('description')->count('description');
+
+        return view('backend.view_product', compact('alldata', 'totalProducts', 'syncedProducts', 'totalInventoryValue', 'categories'));
     }
 
     public function AddProduct(){

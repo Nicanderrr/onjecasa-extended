@@ -13,10 +13,6 @@
 
 @section('admin')
 @php
-  $totalProducts = $alldata->count();
-  $syncedProducts = $alldata->filter(fn ($product) => ! empty($product->pos_product_id))->count();
-  $totalInventoryValue = $alldata->sum(fn ($product) => (float) ($product->price ?? 0) * max(0, (int) ($product->stock ?? 0)));
-  $categories = $alldata->pluck('description')->filter()->unique()->count();
   $fallbackImage = asset('upload/no_image.jpg');
 @endphp
 
@@ -84,13 +80,16 @@
       </div>
       <div class="entity-filter-wrap">
         <i class="bi bi-search" aria-hidden="true"></i>
-        <input
-          type="search"
-          class="form-control form-control-sm entity-filter"
-          placeholder="Search website products"
-          aria-label="Filter website products"
-          data-table-filter="#website-products-table"
-        >
+        <form method="GET" action="{{ route('view_product') }}">
+          <input
+            type="search"
+            name="q"
+            value="{{ request('q') }}"
+            class="form-control form-control-sm entity-filter"
+            placeholder="Search website products"
+            aria-label="Search website products"
+          >
+        </form>
       </div>
     </div>
 
@@ -191,6 +190,12 @@
         </tbody>
       </table>
     </div>
+    @if($alldata->hasPages())
+      <div class="card-footer border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <small class="text-muted">Showing {{ $alldata->firstItem() }} to {{ $alldata->lastItem() }} of {{ $alldata->total() }} products</small>
+        {{ $alldata->links() }}
+      </div>
+    @endif
   </div>
 </div>
 

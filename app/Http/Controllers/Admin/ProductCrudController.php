@@ -16,10 +16,26 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductCrudController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $products = BranchContext::scope(DB::table('pos_products'))->orderByDesc('id')->get();
-        return view('pos_admin.products.index', compact('products'));
+        $catalogQuery = BranchContext::scope(DB::table('pos_products'));
+        $productsQuery = clone $catalogQuery;
+        $search = trim((string) $request->input('q', ''));
+
+        if ($search !== '') {
+            $productsQuery->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('code', 'like', '%' . $search . '%');
+            });
+        }
+
+        $products = $productsQuery->orderByDesc('id')->paginate(25)->withQueryString();
+        $totalProducts = (clone $catalogQuery)->count();
+        $lowStock = (clone $catalogQuery)->where('stock', '<=', 10)->count();
+        $inventoryValue = (float) ((clone $catalogQuery)->selectRaw('COALESCE(SUM(price * stock), 0) as total')->value('total') ?? 0);
+        $potentialProfit = (float) ((clone $catalogQuery)->selectRaw('COALESCE(SUM((price - COALESCE(cost_price, 0)) * stock), 0) as total')->value('total') ?? 0);
+
+        return view('pos_admin.products.index', compact('products', 'totalProducts', 'lowStock', 'inventoryValue', 'potentialProfit'));
     }
 
     public function create(): View
