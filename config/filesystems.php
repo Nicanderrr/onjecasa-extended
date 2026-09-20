@@ -1,5 +1,7 @@
 <?php
 
+$publicPath = env('APP_PUBLIC_PATH') ?: ($_SERVER['DOCUMENT_ROOT'] ?? null);
+
 return [
 
     /*
@@ -39,8 +41,8 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => env('APP_PUBLIC_PATH')
-                ? rtrim(env('APP_PUBLIC_PATH'), '/\\') . DIRECTORY_SEPARATOR . 'storage'
+            'root' => $publicPath
+                ? rtrim($publicPath, '/\\') . DIRECTORY_SEPARATOR . 'storage'
                 : storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
@@ -72,7 +74,7 @@ return [
     |
     */
 
-    'links' => env('APP_PUBLIC_PATH') ? [] : [
+    'links' => $publicPath ? [] : [
         public_path('storage') => storage_path('app/public'),
     ],
 

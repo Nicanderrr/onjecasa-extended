@@ -37,7 +37,12 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })->create();
 
-if ($publicPath = env('APP_PUBLIC_PATH')) {
+$publicPath = env('APP_PUBLIC_PATH');
+if (! $publicPath && ! empty($_SERVER['DOCUMENT_ROOT']) && is_file($_SERVER['DOCUMENT_ROOT'] . '/index.php')) {
+    $publicPath = $_SERVER['DOCUMENT_ROOT'];
+}
+
+if ($publicPath) {
     $app->usePublicPath($publicPath);
 }
 
