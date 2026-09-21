@@ -152,10 +152,25 @@ class ProductCrudController extends Controller
             ->map(fn (array $row) => trim((string) ($row[$headers['code']] ?? '')))
             ->filter()
             ->countBy();
+        $mergeableCodes = collect($rows)
+            ->map(fn (array $row) => $this->importRow($row, $headers))
+            ->filter(fn (array $values) => trim((string) ($values['code'] ?? '')) !== '')
+            ->groupBy(fn (array $values) => trim((string) $values['code']))
+            ->filter(function ($group) {
+                return $group
+                    ->pluck('name')
+                    ->map(fn ($name) => $this->normalizedImportName($name))
+                    ->filter()
+                    ->unique()
+                    ->count() === 1;
+            })
+            ->keys();
         $created = 0;
         $updated = 0;
         $skipped = 0;
-        DB::transaction(function () use ($rows, $headers, $codeCounts, $branchId, $syncToWebsite, &$created, &$updated, &$skipped) {
+        $merged = 0;
+        DB::transaction(function () use ($rows, $headers, $codeCounts, $mergeableCodes, $branchId, $syncToWebsite, &$created, &$updated, &$skipped, &$merged) {
+            $mergedCodes = [];
             foreach ($rows as $number => $row) {
                 $values = $this->importRow($row, $headers);
                 if (trim((string) ($values['name'] ?? '')) === '') {
@@ -166,8 +181,13 @@ class ProductCrudController extends Controller
                 $roundedBarcode = preg_match('/^\d{12,}0{5,}$/', $code) === 1;
                 $repeatedCode = $code !== '' && ($codeCounts[$code] ?? 0) > 1;
                 $scientificBarcode = preg_match('/^\d+(?:\.\d+)?E\+\d+$/i', $code) === 1;
-                if ($roundedBarcode || $repeatedCode || $scientificBarcode) {
+                $mergeableDuplicate = $repeatedCode && $mergeableCodes->contains($code);
+                if ($roundedBarcode || $scientificBarcode || ($repeatedCode && ! $mergeableDuplicate)) {
                     $skipped++;
+                    continue;
+                }
+                if ($mergeableDuplicate && isset($mergedCodes[$code])) {
+                    $merged++;
                     continue;
                 }
                 if ($code === '') {
@@ -203,15 +223,26 @@ class ProductCrudController extends Controller
                 if ($syncToWebsite) {
                     $this->syncPosProductToWebsite($productId, false);
                 }
+                if ($mergeableDuplicate) {
+                    $mergedCodes[$code] = true;
+                }
             }
         });
 
         $message = "Product import complete: {$created} created, {$updated} updated.";
+        if ($merged > 0) {
+            $message .= " {$merged} duplicate rows merged into their matching products.";
+        }
         if ($skipped > 0) {
             $message .= " {$skipped} skipped because their barcode was duplicated or converted by Excel; correct those barcodes in the source file before importing them.";
         }
 
         return $message;
+    }
+
+    private function normalizedImportName(mixed $name): string
+    {
+        return (string) preg_replace('/[^a-z0-9]+/i', '', strtolower(trim((string) $name)));
     }
 
     private function importSql($file, int $branchId): string
